@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M8 CCL出荷推定</title>
+<style>
+:root {
+  color-scheme: light;
+  --surface-1: #fcfcfb;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #7a7974;
+  --grid: #e6e5e0;
+  --axis: #bdbcb6;
+  --series-1: #2a78d6;
+  --range: #0b0b0b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --surface-1: #1a1a19;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #94938b;
+    --grid: #2e2e2c;
+    --axis: #4a4a47;
+    --series-1: #3987e5;
+    --range: #ffffff;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1: #1a1a19;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #94938b;
+  --grid: #2e2e2c;
+  --axis: #4a4a47;
+  --series-1: #3987e5;
+  --range: #ffffff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; padding: 24px 16px; background: var(--surface-1); color: var(--text-primary);
+  font-family: system-ui, -apple-system, "Hiragino Sans", "IPAGothic", "Noto Sans JP", sans-serif;
+}
+main { max-width: 760px; margin: 0 auto; }
+h1 { font-size: 20px; margin: 0 0 4px; }
+.sub { color: var(--text-secondary); font-size: 13px; margin: 0 0 16px; line-height: 1.5; }
+.chart { position: relative; }
+svg { width: 100%; height: auto; display: block; overflow: visible; }
+svg text { font-family: inherit; }
+.tick { fill: var(--text-muted); font-size: 12px; }
+.xlab { fill: var(--text-secondary); font-size: 13px; }
+.val { fill: var(--text-primary); font-size: 13px; font-weight: 600; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); margin: 8px 0 0; }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 12px; height: 12px; border-radius: 3px; background: var(--series-1); display: inline-block; }
+.rg { width: 2px; height: 14px; background: var(--range); display: inline-block; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--axis); border-radius: 6px; padding: 8px 10px; font-size: 12px; line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12); opacity: 0; transition: opacity .1s; white-space: nowrap;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 20px; }
+th, td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: right; }
+th:first-child, td:first-child { text-align: left; }
+th { color: var(--text-secondary); font-weight: 600; }
+.notes { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-top: 16px; }
+.notes p { margin: 0 0 6px; }
+.tbl-wrap { overflow-x: auto; }
+</style>
+</head>
+<body>
+<main>
+  <h1>AIサーバー向けM8級CCL 年間出荷量（推定）</h1>
+  <p class="sub">単位：百万枚。棒は中央推定、ひげは仮定レンジ（低〜高）。<br>ゴールドマン・サックス（2026年8月）のAIサーバー向けCCL総量とM9+比率から逆算した独自推計。</p>
+  <div class="chart" id="chart">
+    <svg id="svg" viewBox="0 0 720 360" role="img" aria-label="M8 CCL推定出荷量 2025〜2028年"></svg>
+    <div class="tip" id="tip"></div>
+  </div>
+  <div class="legend">
+    <span><i class="sw"></i>M8 中央推定</span>
+    <span><i class="rg"></i>推定レンジ（低〜高）</span>
+  </div>
+
+  <div class="tbl-wrap">
+  <table>
+    <thead>
+      <tr><th>年</th><th>AI CCL総量<br>(GS)</th><th>M9+比率<br>(GS)</th><th>M9未満の量</th><th>うちM8比率<br>(仮定)</th><th>M8推定<br>(中央)</th><th>M8レンジ</th></tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  </div>
+
+  <div class="notes">
+    <p><b>計算式：</b>M8 ＝ AI CCL総量 ×（1 − M9+比率）× M9未満に占めるM8の比率</p>
+    <p><b>出典あり：</b>AI CCL総量（2025年27百万枚 → 2026年42 → 2027年78 → 2028年131）、M9+比率（0% → 7% → 41% → 58%）。いずれもゴールドマン・サックス 2026年8月レポートの報道値です。2025年のM9+比率は0%と報じられています。</p>
+    <p><b>仮定：</b>M9未満に占めるM8の比率。2025年はM6/M7（ASICや旧世代）がまだ残るため約55%。2026年は約70%、2027年は約85%、2028年は約90%と、M7以下が縮小していく前提です。グレード別の内訳を公表した一次資料は見つからなかったため、ここは推計者の仮定です。</p>
+    <p>対象はAIサーバー（GPU・ASIC）向けのみです。汎用サーバーやスイッチ単体向けは含みません。M8.5/M8Uは「M8」に含めています。</p>
+  </div>
+</main>
+<script>
+const data = [
+  { y: "2025", total: 27,  m9: 0.00, lo: 0.45, mid: 0.55, hi: 0.65 },
+  { y: "2026", total: 42,  m9: 0.07, lo: 0.60, mid: 0.70, hi: 0.80 },
+  { y: "2027", total: 78,  m9: 0.41, lo: 0.75, mid: 0.85, hi: 0.90 },
+  { y: "2028", total: 131, m9: 0.58, lo: 0.80, mid: 0.90, hi: 0.95 },
+].map(d => {
+  const sub = d.total * (1 - d.m9);
+  return { ...d, sub, vLo: sub * d.lo, vMid: sub * d.mid, vHi: sub * d.hi };
+});
+const f1 = v => v.toFixed(1);
+
+// table
+document.getElementById("tbody").innerHTML = data.map(d =>
+  `<tr><td>${d.y}</td><td>${d.total}</td><td>${Math.round(d.m9*100)}%</td><td>${f1(d.sub)}</td>` +
+  `<td>${Math.round(d.mid*100)}%</td><td><b>${f1(d.vMid)}</b></td><td>${f1(d.vLo)}〜${f1(d.vHi)}</td></tr>`
+).join("");
+
+// chart
+const W = 720, H = 360, m = { t: 36, r: 16, b: 36, l: 44 };
+const iw = W - m.l - m.r, ih = H - m.t - m.b;
+const yMax = 60, ticks = [0, 10, 20, 30, 40, 50, 60];
+const y = v => m.t + ih - (v / yMax) * ih;
+const band = iw / data.length, bw = Math.min(64, band * 0.42);
+const ns = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("svg");
+const el = (tag, attrs, parent = svg) => {
+  const e = document.createElementNS(ns, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  parent.appendChild(e); return e;
+};
+ticks.forEach(t => {
+  el("line", { x1: m.l, x2: W - m.r, y1: y(t), y2: y(t), stroke: t === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 });
+  const tx = el("text", { x: m.l - 8, y: y(t) + 4, "text-anchor": "end", class: "tick" }); tx.textContent = t;
+});
+const ylab = el("text", { x: m.l - 8, y: m.t - 16, "text-anchor": "end", class: "tick" }); ylab.textContent = "百万枚";
+
+const tip = document.getElementById("tip"), chart = document.getElementById("chart");
+data.forEach((d, i) => {
+  const cx = m.l + band * i + band / 2;
+  const top = y(d.vMid), base = y(0), r = 4;
+  // bar: rounded top, flat baseline
+  const x0 = cx - bw / 2, x1 = cx + bw / 2;
+  el("path", { d: `M${x0},${base} V${top + r} Q${x0},${top} ${x0 + r},${top} H${x1 - r} Q${x1},${top} ${x1},${top + r} V${base} Z`, fill: "var(--series-1)" });
+  // range whisker
+  const g = el("g", { stroke: "var(--range)", "stroke-width": 2, "stroke-linecap": "round" });
+  el("line", { x1: cx, x2: cx, y1: y(d.vHi), y2: y(d.vLo) }, g);
+  el("line", { x1: cx - 8, x2: cx + 8, y1: y(d.vHi), y2: y(d.vHi) }, g);
+  el("line", { x1: cx - 8, x2: cx + 8, y1: y(d.vLo), y2: y(d.vLo) }, g);
+  const vt = el("text", { x: cx + bw / 2 + 6, y: top + 4, class: "val" }); vt.textContent = f1(d.vMid);
+  const xt = el("text", { x: cx, y: H - m.b + 22, "text-anchor": "middle", class: "xlab" }); xt.textContent = d.y + (d.y === "2025" ? "" : "E");
+  // hit target
+  const hit = el("rect", { x: m.l + band * i, y: m.t, width: band, height: ih, fill: "transparent" });
+  hit.addEventListener("mousemove", ev => {
+    tip.innerHTML = `<b>${d.y}${d.y === "2025" ? "" : "E"}</b><br>M8 中央推定：<b>${f1(d.vMid)}</b> 百万枚<br>レンジ：${f1(d.vLo)}〜${f1(d.vHi)}<br>AI CCL総量：${d.total}（M9+ ${Math.round(d.m9*100)}%）`;
+    const rc = chart.getBoundingClientRect();
+    let left = ev.clientX - rc.left + 12;
+    if (left + 200 > rc.width) left = ev.clientX - rc.left - 200;
+    tip.style.left = left + "px"; tip.style.top = (ev.clientY - rc.top - 10) + "px"; tip.style.opacity = 1;
+  });
+  hit.addEventListener("mouseleave", () => tip.style.opacity = 0);
+});
+</script>
+</body>
+</html>
