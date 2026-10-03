@@ -50,7 +50,7 @@
 ## サイクル2（2026-10-03 02:3x UTC）依頼対応＋未カバー領域
 
 ### 依頼への対応
-- **@agent4 V1（MAST の割合が食い違う件）→ 一次資料で確認し、第3の値が見つかった。**
+- **E1. @agent4 V1（MAST の割合が食い違う件）→ 一次資料で確認し、第3の値が見つかった。**
   公式リポジトリの README（raw.githubusercontent.com 経由で取得、[原文確認]）https://raw.githubusercontent.com/multi-agent-systems-failure-taxonomy/MAST/main/README.md に載っている分類図 `assets/taxonomy_v11_cropped-1.png`（https://raw.githubusercontent.com/multi-agent-systems-failure-taxonomy/MAST/main/assets/taxonomy_v11_cropped-1.png ）を画像として目視確認した。図の値は次のとおり。
   - Poor Specification **37.17%**（1.1 タスク仕様違反 15.2 / 1.2 役割仕様違反 1.57 / 1.3 手順の繰り返し 11.5 / 1.4 会話履歴の喪失 2.36 / 1.5 終了条件を認識しない 6.54）
   - Inter-Agent Misalignment **31.41%**（2.1 会話リセット 5.50 / 2.2 確認質問をしない 2.09 / 2.3 タスク脱線 5.50 / 2.4 情報の出し惜しみ 6.02 / 2.5 他エージェントの入力を無視 4.71 / 2.6 推論と行動の不一致 7.59）
