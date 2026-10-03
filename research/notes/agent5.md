@@ -39,3 +39,33 @@
 - agent1 のノート（13件のスキャン＋論点 P1〜P6）を REPORT §1〜5 に統合した。
 - **食い違いを発見**: MAST の割合が agent1 は 41.8/36.9/21.3%、自分は 44.2/32.3/23.5%。どちらも二次情報。arXiv の版の違いの可能性がある（推測）。agent4 に検証を依頼。
 - arXiv 2502.08788 の題名も、検索結果によって2通りある（改題の可能性、推測）。
+
+## サイクル2（2026-10-03 02:3x UTC）
+
+### 前回からの変化
+- agent2（問い1・2）、agent3（問い3・4）、agent4（検証 R1〜R9、V1〜V8）がサイクル1のノートを追加した。agent1 はサイクル2をまだ push していない。
+- 自分宛ての依頼への対応:
+  - agent4 の V1 → REPORT は MAST 最終版（NeurIPS 2025 D&B）の **44.2/32.3/23.5%** を採用し、版を明記。41.8/36.9/21.3% は初期版とみられる（agent4 の推定、[二次]）。
+  - agent4 の V5 → 2502.08788 は同じ論文の改題（旧題 "If Multi-Agent Debate is the Answer, What is the Question?"）で解決。
+  - agent3 の確度タグ提案、agent4 の「[二次]には参照した要約URLも書く」提案 → REPORT の凡例に採用し、問い5の提案に入れた。
+  - agent2 の改善案3点（1件1ファイル化、依頼の型付け、CLAIM 宣言） → 問い5の表に統合。
+
+### 調査: Claude Code agent teams 公式ドキュメント [一次]
+出典: https://code.claude.com/docs/en/agent-teams
+- 構成は、リード1＋チームメイト＋**共有タスクリスト**（pending / in progress / completed と依存関係）＋**メールボックス**（エージェント間の直接メッセージ）。
+- タスクの取得には**ファイルロック**を使い、同時に取ろうとしたときの競合を防ぐ。依存タスクが完了するまで、後続タスクは取得できない。
+- 人数: 「Start with 3-5 teammates」、「Three focused teammates often outperform five scattered ones」、「5-6 tasks per teammate」。トークンは人数に比例して増え、調整コストも増える。
+- 衝突: 「Two teammates editing the same file leads to overwrites」→ ファイルの所有を分ける。
+- 品質ゲート: `TaskCompleted` フックで条件を満たさない完了を拒否できる（exit 2）。`TeammateIdle` でアイドル化を引き止められる。
+- 失敗: 「The lead can stop early too, deciding the team is finished before all tasks are actually complete」「Task status can lag」「Letting a team run unattended for too long increases the risk of wasted effort」。
+- 向いている用途は「Research and review」。競合する仮説を互いに反証させる討論構造は、アンカリング（最初の説への固着）を防ぐ。
+- 本プロジェクトとの対応: BOARD ≒ タスクリストとメールボックスを兼ねた掲示板だが、ロックも依存関係もない。PROTOCOL の「他人のファイルを書かない」はファイル所有の分割と一致。
+
+### 本試運転の観察（追加）
+- サイクル1で agent1→agent5→agent3→agent2→agent5→agent4 の順に push が重なったが、**git の衝突は観測されなかった**（全員が pull --rebase で解決）。BOARD 末尾への追記（論点・疑義）も自動マージされた。→ 衝突リスク（P7）は低く、優先度を下げる。
+- 最も大きな実害は「**一次資料の遮断**」（arxiv/openreview/aclanthology/HF/research.google が 403、agent4 が確認）と「**単一ソース依存**」（全員が同じ Anthropic 記事を引用）だった。これらは問い3と問い5の中心的な材料。
+- agent1（広く調査）と agent2/3（深掘り）の境界があいまいで、Anthropic・MAST・討論は 4〜5人が重複して調べていた（agent2 も指摘）。重複は事実として観測された。
+
+### 判断の記録
+- 結論で使う根拠の扱い: [一次] は断定してよい。[二次] は「報告がある」と書く。agent4 が ✘ を付けた数値は REPORT に載せない（迎合の数値は出典が確定するまで「一部の研究で」と弱めて書く）。
+- 問い5の提案は「本試運転で観測された問題 × 外部の根拠」の両方があるものを優先し、P1〜P10 に整理した。
