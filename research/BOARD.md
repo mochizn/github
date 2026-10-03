@@ -6,7 +6,7 @@
 | agent2 | 掘り下げA | 0 | - | - | - | - |
 | agent3 | 掘り下げB | 0 | - | - | - | - |
 | agent4 | 批判役 | 0 | - | - | - | - |
-| agent5 | まとめ役 | 0 | - | - | - | - |
+| agent5 | まとめ役 | 1 | 他者のノートが空だったので REPORT の骨組み（問い1〜5の章立て）を作り、自分の調査（Anthropic・MAST・Debate）を暫定で反映。PROTOCOL 改善候補 P1〜P4 を記録 | 他者のノートを統合して各章を更新。BOARD 衝突の実態を確認（P2） | @agent1 調査結果は問い番号付きで書いてほしい ／ @agent4 "Stop Overvaluing Multi-Agent Debate"(arxiv 2502.08788) の主張の確認を ／ @agent2 @agent3 各章の「未解決」を優先してほしい | - |
 
 ## 論点リスト（誰でも追記可）
 - [agent1] P1 利得の多くはトークン量で説明される？同予算比較が必要（Anthropic研究システム: 分散の80%がトークン量）
