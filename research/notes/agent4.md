@@ -72,3 +72,56 @@
 - **単一ソース依存**: 4人全員が Anthropic 記事を主要根拠にしている。独立した二つ目の実証がない主張（例: 「10体超で責任分割」の人数目安）は REPORT で「1社の経験則」と明記すべき。
 - **全員が同じ検索要約に依存**: arxiv 遮断下では、全員が同じ検索エンジン要約を読んでいるため、要約の誤りが5人に同時に伝播しうる（V3/V4 はその実例の可能性）。「5人が同じ数値を書いている」ことは独立な裏付けにならない。→ 問い3（品質管理）・問い5（改善提案）の材料。提案: 環境で一次資料が取れない場合、数値は「[二次] 出典URL＋参照した要約サイトURL」の2点を書く規約。
 - agent3 の「批判役は主張だけ抜き出して出典を開き直す（factored）」提案に同意。ただし本環境では "開き直す" 対象の大半が遮断されている。**検証器が環境に依存する**ことを PROTOCOL 改善に反映すべき（例: 起動時に主要ドメインの到達性を確認し BOARD に記録する）。
+
+## サイクル2（2026-10-03 02:3x UTC）
+
+### 前回からの変化
+- 他エージェント（agent1/2/3）はまだサイクル2未着。agent5 がサイクル1で REPORT を作成し、MAST 不一致と 2502.08788 の題名問題を私に依頼。→ 今回は (1) 自分宛て依頼への回答、(2) 前回積み残し V7/V8、(3) **REPORT に入った主張**の照合を優先した（REPORT に入る＝結論に効くため）。
+- 一次確認可能ドメインは前回と同じ（anthropic.com, github.com は可。cognition.com も今回遮断を確認）。
+
+### 依頼への回答
+- **@agent5 MAST 割合**: V1 の結論を維持。44.2/32.3/23.5% は NeurIPS 2025 D&B 版（1642トレースの記述と同じ文書）、41.8/36.9/21.3% は「200タスク/150トレース」記述の初期版とまとめ記事に出る。REPORT は 44.2/32.3/23.5（NeurIPS 2025 版）を採用し、旧版値は脚注に、が妥当。[二次・複数スニペット一致]
+- **@agent5 2502.08788 の題名**: 同一論文の改題。初版 "If Multi-Agent Debate is the Answer, What is the Question?" → 現行 "Stop Overvaluing Multi-Agent Debate — We Must Rethink Evaluation and Embrace Model Heterogeneity"。alphaxiv の v1 ページが旧題、abs ページと v3 overview が新題 https://www.alphaxiv.org/abs/2502.08788v1 , https://arxiv.org/abs/2502.08788 [二次]。引用は新題＋arXiv番号で統一を。
+
+### 照合結果（V7〜V16）
+
+| ID | 対象 | 判定 | 根拠・コメント |
+|---|---|---|---|
+| V7 | agent2: Kim et al. Independent エラー17.2倍 / Centralized 4.4倍 | ✔ 数値一致 [二次] | 複数の要約で "Independent agents amplify errors 17.2x, centralized contains to 4.4x" https://arxiv.org/pdf/2512.08296 。+80.8%（並列タスク）, 逐次推論で39〜70%劣化も一致。※「エラー増幅」の定義（何に対する倍率か）は未確認なので、REPORT では文言を要約どおりに留めること |
+| V8a | agent3: CoVe「**factored 版が最良**で FActScore 55.9→71.4」 | **✘ 一部誤り** | 55.9→71.4 は **factor+revise** 版。factored 版は 63.7。しかも factored は1回答あたり事実数が 16.6→11.7 に減る（精度↑・網羅性↓のトレードオフ）https://arxiv.org/pdf/2309.11495 [二次: 検索要約に表の値] 。→ 「独立検証で幻覚が減る」結論自体は維持できるが、**"言うことを減らして正確に見せる"効果が混ざる**点を明記すべき。本プロジェクトへの含意: 批判役の検証で主張を削ると見かけの正確さが上がるが網羅性が落ちる（推測） |
+| V8b | agent3: MAST の ChatDev 介入 +15.6 | ✔ 概ね一致 [二次] | 「高レベルの目的検証ステップ追加で ProgramDev のタスク成功 +15.6%」、別に「CEO に最終決定権を与える役割仕様の修正で +9.4%」https://arxiv.org/html/2503.13657 。単位（%かpt）は要約では "%"。agent3 の "pt" 表記は未確認 |
+| V9 | REPORT §1 / agent1: EMNLP 2024 aclanthology 1112 =「同予算では CoT-SC が debate を上回る」 | ✔ 一致 [二次] | 論文名 "Reasoning in Token Economies: Budget-Aware Evaluation of LLM Reasoning Strategies" https://aclanthology.org/2024.emnlp-main.1112/ 。追加の要点: **MAD や Reflexion は予算を増やすと逆に悪化しうる**（SC は単調）。→ 問い4（コスト）にも効く。REPORT には論文名を書くべき（現状URLのみ） |
+| V10 | REPORT §1 / agent1: 2509.05396 =「同調で全員一致の誤答が増える」 | ✔ 概ね一致＋**重要な留保** [二次] | 論文名 "Talk Isn't Always Cheap: Understanding Failure Modes in Multi-Agent Debate"（Wynn, Satija, Hadfield; ICML 2025 関連ワークショップ）https://arxiv.org/abs/2509.05396 , https://icml.cc/virtual/2025/49332 。正→誤の変化、議論が長いほど劣化。**さらに: 能力の低いモデルを混ぜると強いモデルの性能も下がる／モデル多様性では失敗モードが解消しない**との記述。→ agent3・REPORT の「異質性（別モデル）を入れれば良い」（2502.08788 の推奨）と**衝突**。異質性は"能力が同等以上の別モデル"に限るなど条件付きで書くべき |
+| V11 | REPORT §2 / agent1: Blackboard 2510.01285 で 13〜57% 改善 | ✔ 数値一致 [二次] | "LLM-Based Multi-Agent Blackboard System for Information Discovery in Data Science"（Salemi et al., Google 共著）https://arxiv.org/abs/2510.01285 。end-to-end 成功率で13–57%相対改善、データ発見F1は最大9%。**ただし**「BOARD.md はこの型に近い」は類推が緩い: 原論文はサブエージェントが**能力に応じて自発的に依頼を引き受ける**方式で、本プロトコルは役割固定（推測） |
+| V12 | REPORT §2 / agent1: C コンパイラ事例 | ✔ 一次確認 | https://www.anthropic.com/engineering/building-c-compiler 16エージェント、`current_tasks/` ロック（同じタスクを取ろうとすると git の同期で後者が別タスクへ）、約2,000セッション/2週間、入力20億・出力1.4億トークン、$20,000弱、GCC をオラクルにして分割。役割は「重複コード統合」「性能改善」「効率的なコード出力」「**Rust 開発者視点での設計批評**」「ドキュメント」。"task verifier is nearly perfect" が必要と明記。→ agent1 の「コード品質批評役」は大意OK。**注意: 検証器は自動テスト**であり、本プロジェクトのような研究タスクには同等の検証器がない＝そのまま外挿不可 |
+| V13 | REPORT §2/§3 / agent5: Effective harnesses 記事 | ✔ 一次確認＋**留保** | https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents init.sh、claude-progress.txt、`"passes": false` の機能リストJSON、"It is unacceptable to remove or edit tests" を確認。**ただし記事自身が「別エージェントと呼ぶのはプロンプトが違うだけ。システムプロンプト・ツール・ハーネスは同一」と明言＝逐次の単一エージェント構成**。REPORT §2 で「マルチエージェントの同期手法」として引く場合は「逐次セッション間の引き継ぎ」の根拠に限定すべき |
+| V14 | agent2: エージェントPR 14万件超でマージ衝突率 27.67%、内訳57.6%/26.8% | ⚠ 数値は概ね一致、**解釈に疑義** | 一次出典は AgenticFlict（arXiv:2604.03551）https://github.com/unlv-evol/AgenticFlict 。AIDev の 932,791 PR → 未マージ/オープンの 142,652 件 → **107,026 件の模擬マージ**で 27.67% が衝突 [二次]。分母は14万件ではなく模擬マージ10.7万件。対象は**未マージPRに偏ったサンプル**で、上流の進行との衝突。**本プロジェクトの「同時に共有ファイルへ追記」状況とは別物**。内訳57.6%/26.8%は別の二次記事（33,596PR の研究？）由来で未確認。agent2 が引用した danielvaughan.com は個人ブログ（遮断で未取得） |
+| V15 | Cognition の立場（R7 の更新） | 更新あり [二次] | 2026-04-22 "Multi-Agents: What's Actually Working"（Walden Yan）https://cognition.com/blog/multi-agents-working : 「**書き込みは単一スレッドに保ち、追加エージェントは行動でなく知性（レビュー・調査）を提供する**」形は機能する。manager が分割→子が実行→manager が統合（map-reduce-and-manage）。無構造なスウォームは"mostly a distraction"。文脈（同じ情報源・todo・plan ファイル）を最大限共有。→ 本プロトコルは各自のノートに書き込みを分離しており「single writer per file」は満たすが、**REPORT への書き込みを agent5 に一本化している点はこの原則と整合**。逆に BOARD は多重書き込み |
+| V16 | REPORT §5 P7（agent5）「BOARD 衝突は未観測なので保留」 | **✘ 反例あり（私の実体験）** | サイクル1で私（agent4）の push 時に `CONFLICT (content): Merge conflict in research/BOARD.md` が発生。原因: 私の行の更新と「論点リスト」末尾追記が、agent1/2/3/5 の同時更新と同じ hunk に入った。手動解決に約2回の rebase を要し、一度は rebase 途中状態で push に失敗。→ **P7 は「保留」ではなく「観測済み・要対策」**。agent2 の「1件1ファイル化」提案、agent5 O2 の `board/agentN.md` 分割案を支持する根拠 |
+
+### 横断的な批判（REPORT への提言）
+1. **"異質性を入れれば討論は効く" は未確立**: 2502.08788（異質性で改善）vs 2509.05396（弱いモデル混入で劣化・多様性では失敗が解消しない）。REPORT §1・§3 で一方だけを書かないこと。
+2. **検証器の外挿問題**: 成功事例（C コンパイラ、long-running harness）はいずれも**自動テストという強い検証器**がある。研究タスクにはそれがないので、本プロトコルの成功見込みを過大評価しないこと。研究タスクで代替になりうるのは URL 到達性・引用一致チェック（推測）だが、本環境ではその到達性自体が大きく制限されている。
+3. **数値の圧縮で条件が落ちる例が今回も2件**（V8a の factored/factor+revise 取り違え、V14 の分母）。いずれも「検索要約→ノート」の1ホップで起きた。→ 問い3の具体例として REPORT に入れる価値あり。
+
+### 判断の記録
+- 他者のサイクル2が未着のため、既に REPORT に入った主張を優先的に検証した（結論への影響が大きい順）。
+- V8a は検索要約2件の数値が整合（55.9/63.7/71.4、事実数16.6/11.7）していたため ✘ 判定とした。原文未取得なので確度は中。
+
+### 次サイクル（最終）でやること
+- agent1〜3 のサイクル2の新規主張を照合（特に REPORT に入りそうなもの）
+- 自分の指摘（V3/V4/V8a/V14/V16）が各ノート・REPORT に反映されたか確認
+- 批判役としての総括: 本試運転で観測された誤りの型（版違い・出典取り違え・条件の脱落・単一ソース依存）を agent5 の問い5向けにまとめる
+
+### サイクル2 追補（push 前に agent1/2/3 のサイクル2が着いたため照合）
+
+| ID | 対象 | 判定 | コメント |
+|---|---|---|---|
+| V17 | agent1 E1: MAST 公式リポジトリの図（taxonomy_v11）で第3の値 37.17/31.41/31.41% | ✔ 受け入れ・**私の V1 推奨を撤回** | 私はサイクル1・2で「NeurIPS 版 44.2/32.3/23.5 を採用」と推奨したが、根拠は検索スニペットのみ。agent1 は公式リポジトリの図を原文確認しており、証拠の質が上。agent1 の「幅で示す」案に賛成。**ただし agent1 の「順位（仕様 ≥ 協調 ≳ 検証）は安定」も言い過ぎ**: 3版のうち v11 図では協調＝検証（31.41＝31.41）で、旧版では検証が最小(21.3)。**全版で安定なのは「仕様・設計が最大」だけ**。REPORT に書けるのはそこまで |
+| V18 | agent2: C コンパイラ事例は「オーケストレータなし」 | ✔ 一次確認 | 原文 "I don't use an orchestration agent. Instead, I leave it up to each Claude agent to decide how to act." 通信はロックのみ（"haven't yet implemented any other method for communication between agents"）https://www.anthropic.com/engineering/building-c-compiler 。agent2 の「中央集約の本質は検証点の集中で、テストが肩代わりできる」解釈は筋が通るが推測（agent2 も推測と明記済み） |
+| V19 | agent1 E2: claude.com「いつマルチエージェントを使うか」 | ✔ 一次確認（大部分） | 2026-01-23 公開。「同等タスクで単一比3〜10倍のトークン」「文脈保護・並列化・専門化の3場面」「単一エージェントのプロンプト改善で同等の結果」「作業の種類別に分けるな、文脈境界で分けよ」「検証サブエージェントは文脈の受け渡しが最小なので安定して成功」を確認 https://claude.com/blog/building-multi-agent-systems-when-and-how-to-use-them 。agent1 の「強いオーケストレーターは検証段を挟まず直接評価する傾向」は私の取得では確認できず（未確認）。**含意**: 批判役(検証役)は「文脈の受け渡しが最小で済む」唯一安定な分割として記事に支持されている一方、調査→深掘り→まとめの流れは「作業の種類別」分割に当たり記事の警告対象（agent1 P7 に同意） |
+| V20 | agent3: CoVe/ChatDev は [二次情報] のまま | 補足 | 私の V8a（55.9→71.4 は factor+revise 版、factored は63.7で事実数も減る）を参照して REPORT 用文言を直してほしい |
+| — | agent2 V3/V4 の修正 | ✔ 反映確認 | 取り消し線で履歴を残す方式は良い（検証可能性が上がる） |
+| — | agent3: BOARD 衝突の実例 | ✔ 私の V16 と独立に同じ観測 | 2件の独立な観測で、P7「未観測」は誤りと確定。衝突したのはいずれも「誰でも追記可」の共有末尾（私の場合は行更新も同じ hunk）。本サイクル2の push でも私は再び BOARD で衝突した（3件目） |
+
+**自己批判**: V1 で検索スニペットだけを根拠に「最終版を採用せよ」と断定的に推奨したのは、批判役として自分のチェックリスト（項目2・5）に反していた。一次資料に近い証拠（公式リポジトリの図）が出た時点で撤回する。→ 問い3への教訓: **批判役の指摘も同じ確度タグで扱い、批判役自身も検証対象にする**べき。
