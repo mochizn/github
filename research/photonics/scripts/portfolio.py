@@ -33,27 +33,35 @@ SCORES = {
     "5803": ({"E": 4, "R": 4, "M": 5, "V": 4, "K": 3, "L": 5}, {"E", "R", "M", "V", "K", "L"}, 55, True),
     "LITE": ({"E": 5, "R": 4, "M": 5, "V": 2, "K": 2, "L": 5}, {"E", "R", "M", "V", "K", "L"}, 67, True),
     "6834": ({"E": 4, "R": 4, "M": 5, "V": 3, "K": 2, "L": 2}, {"E", "R", "M", "V", "K", "L"}, 59, True),
-    "COHR": ({"E": 4, "R": 3, "M": 4, "V": 3, "K": 3, "L": 5}, {"R", "L"}, None, True),
+    "COHR": ({"E": 4, "R": 3, "M": 4, "V": 3, "K": 3, "L": 5}, {"R", "K", "L"}, 54, True),
     "FN":   ({"E": 4, "R": 3, "M": 5, "V": 4, "K": 3, "L": 3}, {"R"}, None, True),
-    "6777": ({"E": 4, "R": 5, "M": 3, "V": 3, "K": 3, "L": 2}, {"R"}, None, True),
+    "6777": ({"E": 4, "R": 5, "M": 3, "V": 3, "K": 2, "L": 2}, {"R", "K"}, 51, True),
     "GLW":  ({"E": 3, "R": 5, "M": 4, "V": 3, "K": 4, "L": 5}, {"R"}, None, False),
     "AVGO": ({"E": 2, "R": 5, "M": 3, "V": 3, "K": 4, "L": 5}, {"R"}, None, False),
-    "5802": ({"E": 2, "R": 4, "M": 4, "V": 3, "K": 4, "L": 5}, {"R"}, None, False),
+    "5802": ({"E": 2, "R": 4, "M": 4, "V": 3, "K": 4, "L": 5}, {"R", "K"}, 43, False),
     "AAOI": ({"E": 4, "R": 2, "M": 4, "V": 3, "K": 1, "L": 3}, {"E", "R", "M", "K"}, 60, True),
     "5801": ({"E": 2, "R": 4, "M": 3, "V": 2, "K": 3, "L": 5}, {"R", "K"}, 55, False),
     "MRVL": ({"E": 3, "R": 2, "M": 3, "V": 3, "K": 3, "L": 5}, {"R"}, None, False),
     "CRDO": ({"E": 2, "R": 2, "M": 5, "V": 3, "K": 3, "L": 5}, {"R"}, None, False),
 }
 
-# 株価（2026-10-02）と REPORT §4.3 のシナリオ値（約2年後, 割引なし）: (株価, 中立値, 確率加重値)
+# 株価（2026-10-02）と REPORT §4.3 のシナリオ値（約2年後, 割引なし）: (株価, 弱気, 中立, 強気)
 PRICES = {
-    "5803": (5598, 5230, 4890),
-    "LITE": (1085.42, 863, 818),
-    "6834": (6850, 6220, 6010),
-    "COHR": (337.04, 308, 281),
-    "FN": (463.69, 500, 448),
-    "AAOI": (115.59, 110, 110),  # 加重値(117)が中立値を上回るため中立値で代用（二極的な分布）
+    "5803": (5598, 2510, 5230, 7600),
+    "LITE": (1085.42, 355, 863, 1400),
+    "6834": (6850, 2780, 6220, 10330),
+    "COHR": (337.04, 155, 302, 455),
+    "FN": (463.69, 180, 500, 720),
+    "AAOI": (115.59, 46.5, 110, 240),
+    "GLW": (164.19, 70, 148, 209),
+    "AVGO": (355.14, 210, 414, 672),
+    "5802": (2452, 1400, 2245, 3255),
+    "6777": (23370, 11400, 22450, 35070),
 }
+PROB = (0.30, 0.50, 0.20)
+
+# 逆算DCF の「含意CAGR − 比較成長率」(pt)。scripts/reverse_dcf_r4_output.md の中央ケース
+GAP = {"LITE": 31.1, "COHR": 21.4, "AAOI": 49.8, "FN": 14.3, "5803": 10.7, "6834": 20.3}
 
 PATTERNS = {
     # 名前: (1銘柄上限, 小型株上限, K≤2を半分にするか, 投機枠%, 群A上限%, 銘柄枠%)
@@ -61,13 +69,6 @@ PATTERNS = {
     "標準": (12, 5, True, 0, 40, 87.5),
     "積極": (15, 8, False, 5, 60, 90),
 }
-
-# 感応度（R4）: 中立シナリオの倍率を 1.2 倍、確率を 25/50/25 にした場合の (中立値, 確率加重値)
-# 弱気値・強気値は REPORT §4.3 のまま。弱気値: 5803 2510, LITE 355, 6834 2780, COHR 120, FN 180, AAOI 46.5
-# 強気値: 5803 7600, LITE 1400, 6834 10330, COHR 455, FN 720, AAOI 240
-BEAR = {"5803": 2510, "LITE": 355, "6834": 2780, "COHR": 120, "FN": 180, "AAOI": 46.5}
-BULL = {"5803": 7600, "LITE": 1400, "6834": 10330, "COHR": 455, "FN": 720, "AAOI": 240}
-
 
 def conviction(s, verified=None):
     tot = 0.0
@@ -88,23 +89,35 @@ def downside_factor(tk):
     return max(0.7, min(1.2, med / d))
 
 
-def alt_prices(tk):
-    p, neutral, _ = PRICES[tk]
-    n2 = neutral * 1.2
-    return p, n2, min(n2, 0.25 * BEAR[tk] + 0.5 * n2 + 0.25 * BULL[tk])
+def weighted(tk, prob=PROB, mult=1.0):
+    p, bear, neu, bull = PRICES[tk]
+    return prob[0] * bear + prob[1] * neu * mult + prob[2] * bull
 
 
 def deploy_fraction(tk, alt=False):
+    """R5: 価格表を agent4 §10 論点2 に合わせて下げた。
+    1/3: 株価 ≤ 確率加重値（期待 ±0 以上） / 2/3: ≤ 確率加重値÷1.15 / 全部: ≤ 確率加重値÷1.30
+    論点1: 含意CAGR が比較成長率 +25pt 超の銘柄は新規に買わない
+    取り逃がし対策（リーダー R5 論点b）: 補正後確信度 ≥ 3.5 かつ V ≥ 4 の銘柄は、価格にかかわらず目標の 1/4 を持つ
+    alt=True は感応度（確率 25/50/25、中立の倍率 ×1.2）"""
     if tk not in PRICES:
         return 0.0
-    p, neutral, weighted = alt_prices(tk) if alt else PRICES[tk]
-    if p > neutral:
+    if GAP.get(tk, 0) > 25:
         return 0.0
-    if p > weighted:
-        return 1 / 3
-    if p > weighted * 0.85:
-        return 2 / 3
-    return 1.0
+    w = weighted(tk, (0.25, 0.5, 0.25), 1.2) if alt else weighted(tk)
+    p = PRICES[tk][0]
+    if p <= w / 1.30:
+        f = 1.0
+    elif p <= w / 1.15:
+        f = 2 / 3
+    elif p <= w:
+        f = 1 / 3
+    else:
+        f = 0.0
+    s, ver, _, _ = SCORES[tk]
+    if conviction(s, ver) >= 3.5 and s["V"] >= 4:
+        f = max(f, 0.25)
+    return f
 
 
 def allocate(name):
@@ -155,10 +168,15 @@ def fmt(d):
 
 
 if __name__ == "__main__":
-    print("| 銘柄 | 素点 | 補正後 | 下値調整 | 今日の投入割合 | 同（感応度: 中立倍率×1.2・確率25/50/25） |")
-    print("|---|---|---|---|---|---|")
+    print("| 銘柄 | 素点 | 補正後 | 下値調整 | 株価 | 確率加重値 | 1/3 | 2/3 | 全部 | 今日の投入割合 | 感応度ケース |")
+    print("|---|---|---|---|---|---|---|---|---|---|---|")
     for tk, (s, ver, _, _) in sorted(SCORES.items(), key=lambda x: -conviction(x[1][0], x[1][1])):
-        print(f"| {tk} | {conviction(s):.2f} | {conviction(s, ver):.2f} | {downside_factor(tk):.2f} | "
+        if tk in PRICES:
+            w = weighted(tk)
+            pr = f"{PRICES[tk][0]:,.0f} | {w:,.0f}（{w / PRICES[tk][0] - 1:+.0%}） | {w:,.0f} | {w / 1.15:,.0f} | {w / 1.3:,.0f}"
+        else:
+            pr = "— | — | — | — | —"
+        print(f"| {tk} | {conviction(s):.2f} | {conviction(s, ver):.2f} | {downside_factor(tk):.2f} | {pr} | "
               f"{deploy_fraction(tk):.2f} | {deploy_fraction(tk, alt=True):.2f} |")
     print()
     for name in PATTERNS:
