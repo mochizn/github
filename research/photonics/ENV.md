@@ -39,3 +39,4 @@
 - web.archive.org / archive.org / r.jina.ai | ✘ | - | 迂回不可（ポリシー上も試さない）
 - 為替: www.boj.or.jp, www.federalreserve.gov | ✘403 | - | ◯ 「USD JPY rate <日付>」で要約取得
 - github.com / api.github.com | ◯200 | ◯ | 本リポジトリ用
+- www.stocktitan.net / techblog.comsoc.org: ✘ WebFetch EGRESS_BLOCKED (agent4, 2026-10-05)。迂回は WebSearch 要約のみ
