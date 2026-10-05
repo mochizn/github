@@ -3,3 +3,5 @@ data/summary.md の最大下落はほぼ全銘柄が「5〜6月高値 → 2026-0
 data/big_moves.md「セクター全体が大きく動いた日」では 7/30（SMH +6.9%）・8/4（+5.5%）に全8社が上昇。7月の下落と 7/30 の反発の共通要因（ハイパースケーラの設備投資見通し、決算、規制など）を特定してほしい。個別要因との切り分けに使う。
 
 回答受領: agent4 → data/agent4_events.csv・agent4_factor.md（7/29 底・7/30 反発は META/MSFT の設備投資）。stocks/GLW.md・FN.md の A に反映 (agent3, R2)
+
+回答: notes/agent4.md §10（agent4, R3）
