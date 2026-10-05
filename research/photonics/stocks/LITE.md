@@ -27,7 +27,7 @@
 | 地域別（出荷先ベース） | 米国外向け 79.2%。FY26: **タイ $626.6M（20.8%）、香港 $519.3M（17.2%）**。中国本土 $174.1M（**8.7%、FY26 の9か月**）。FY25: 香港 24.2%、タイ 17.7% | [二次] 10-K/10-Q 要約（タイ・中国は agent4 V-LITE L13 経由、⚠）。出荷先は受託製造先（中国系モジュールメーカーのタイ工場・Fabrinet 等 [推測]）を含み最終顧客ではない |
 | 生産拠点・関税コメント | ⚠未取得（タイ・中国等に拠点あり [推測]） | |
 | CB・希薄化 | §2b | |
-| 流動性・ボラ・空売り・高値からの下落率 | ⚠未取得 | |
+| ベータ・52週・下落率 | ベータ 1.54（5年月次, 対S&P）、52週 $147.81〜$1,091.61、現値は高値比 −0.6%。2026年最大下落 **−33.6%**（5月高値 $1,085.68 → 2026-07-07 安値、その後全戻し）。90日ボラ・空売りは ⚠未取得 | [二次] stocks/_US_COMPARE.md §2 |
 | 次回決算日 | **2026-11-10 頃（推定）** | [二次] tipranks/marketbeat の推定日 |
 | CPO 移行で得か損か | **中立〜得**: モジュール内 EML 個数は減りうる一方、CPO 外部光源（ELS）・高出力 CW レーザー・OCS で取り返す。量産は 2027年下期〜 | [推測]（agent1-1-1 への回答） |
 
@@ -59,6 +59,12 @@
 - GAAP: FY26 Q4 純損失 $7.2B（EPS −$84.65）。**転換社債の株式化に伴う非現金の消却損 $7.8B**（$7,756.6M）が理由。通期 GAAP 純損失 $6.9B、EPS −$92.96 [二次]（agent4 L4 ✔）
 - キャッシュフロー FY26: 営業CF $751.4M、設備投資 $451.3M（売上比 15.0%）、FCF $300.1M（2年ぶりのプラス）[二次] https://www.alphaspread.com/security/nasdaq/lite/financials/cash-flow-statement/free-cash-flow 系スニペット
 - 出典: https://www.semiconductor-today.com/news_items/2026/feb/lumentum-090226.shtml 、https://x.com/StormDirac/status/2051757849773015523 （Q3 プレスの引用）、https://www.quiverquant.com/news/Lumentum+Q4+Revenue+Tops+$1+Billion+As+GAAP+Loss+Hits+$7.2+Billion 、https://www.stocktitan.net/sec-filings/LITE/8-k-lumentum-holdings-inc-reports-material-event-21905826e626.html
+
+## 2a. NVIDIA の出資（2026-03-02、R4 追記）[二次]
+- NVIDIA が **Series A 転換優先株 2,876,415株を $695.31 で取得（$2B）**＋複数年の購入コミット（数十億ドル規模）と先進レーザーの能力確保権。米国内の製造・R&D・能力増強に充当 https://www.theglobeandmail.com/investing/markets/stocks/LITE/pressreleases/545805/lumentum-raises-2-billion-deepens-nvidia-strategic-partnership/ 、https://www.cnbc.com/2026/03/02/nvidia-investment-coherent-lumentum.html （COHR と同日、各 $2B）
+- 株数への影響: 優先株が普通株に1:1で転換すると +約288万株 [推測：転換比率未確認]。基本株 8,860万株には含まれず、希薄化後 約1.01億株には含まれていると推測 [推測]
+- 現金 $2.7B（FY26 期末）にはこの $2B の残りが含まれる [推測]
+- 含意: 10% 顧客（A 26.6%）が NVIDIA である可能性が高まる（依然 [推測]）。購入コミットは需要の下支えだが、顧客＝株主で交渉力が偏る
 
 ## 2b. 転換社債・希薄化 [二次]
 | シリーズ | 2026-06-27 残高（元本） | 備考 |
