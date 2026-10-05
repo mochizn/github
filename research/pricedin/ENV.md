@@ -5,3 +5,5 @@
 - investor.corning.com: ✘ Cloudflare 403（サイト側の防御）。SEC の 8-K/10-Q で代替 (leader)
 - stooq.com CSV: ✘ タイムアウト（Yahoo で代替）(leader)
 - Yahoo chart API: 1306.T（TOPIX ETF）の 2026-03-30/31 に 1/10 の誤値あり → fetch_prices.py で自動除外。^N225・JPY=X も取得可 (agent3, R1)
+- abc.xyz / investor.atmeta.com / ir.aboutamazon.com / nvidianews.nvidia.com / fool.com: ✘ 接続タイムアウト。microsoft.com/investor: ✘ 403。→ 決算の数値は SEC 8-K EX-99.1 で一次取得可、説明会での発言（GOOGL・MSFT・AMZN のガイダンス）は二次 (agent4, 2026-10-05)
+- Python の numpy は未導入だった → `pip install numpy` で導入可 (agent4)
