@@ -58,7 +58,7 @@ PRICES = {
     "FN": (463.69, 210, 473, 660),
     # GLW・AVGO は agent1（notes/agent1.md §R5-3）と agent3 の値の平均
     "GLW": (164.19, 62, 132, 200),
-    "AVGO": (355.14, 285, 517, 750),
+    "AVGO": (355.14, 240, 517, 750),  # R6: 弱気 $285 → $240（agent4 §15.4: 52週安値 $289.96 は弱気の前提なしに付けた水準）
     # 5802・6777 は agent2（各カード §6）
     "5802": (2452, 1260, 2540, 3620),
     "6777": (23370, 10200, 23800, 35400),
@@ -108,8 +108,7 @@ def deploy_fraction(tk, alt=False):
     """R5: 価格表を agent4 §10 論点2 に合わせて下げた。
     1/3: 株価 ≤ 確率加重値（期待 ±0 以上） / 2/3: ≤ 確率加重値÷1.15 / 全部: ≤ 確率加重値÷1.30
     論点1: 含意CAGR が比較成長率 +25pt 超の銘柄は新規に買わない
-    取り逃がし対策（R6 で agent4 §13.6-3 に合わせて変更）: 補正後確信度 ≥ 3.5 かつ V ≥ 4 で、
-    確率加重値が株価の −10% 以内の銘柄は、価格にかかわらず目標の 1/6 を持つ（打診枠）
+    保険枠（R6、agent4 §15.3）: 補正後確信度の上位2銘柄で、確率加重値が株価の −10% 以内なら、価格にかかわらず目標の 1/6 を持つ
     alt=True は感応度（R5: 弱気寄りの確率 30/50/20）"""
     if tk not in PRICES:
         return 0.0
@@ -126,9 +125,19 @@ def deploy_fraction(tk, alt=False):
     else:
         f = 0.0
     s, ver, _, _ = SCORES[tk]
-    if conviction(s, ver) >= 3.5 and s["V"] >= 4 and w >= p * 0.9:
-        f = max(f, 1 / 6)
+    if tk in insurance_names() and w >= p * 0.9:
+        f = max(f, INSURANCE_FRACTION)
     return f
+
+
+# R6: 保険枠（agent4 §15.3）。確信度の上位2銘柄に、価格表とは別に目標の 1/6 を持つ。V の条件は外した。
+# 費用（期待損失）は REPORT §4.3 に明記。確率加重値が株価の −10% より悪い銘柄には使わない
+INSURANCE_FRACTION = 1 / 6
+
+
+def insurance_names():
+    ranked = sorted(SCORES, key=lambda t: -conviction(SCORES[t][0], SCORES[t][1]))
+    return set(ranked[:2])
 
 
 def implied_bull(tk, bear_p=0.25):
@@ -157,11 +166,11 @@ def allocate(name):
 
     def build(k):
         w = {tk: min(k * raw[tk], rows[tk][2]) for tk in rows}
-        a = sum(v for tk, v in w.items() if SCORES[tk][3])
+        # R6: 群B を半分の重みで群Aの上限に算入（agent4 §15.1 Q5: 2026年は群Bも同じ時期に下げた）
+        a = sum(v if SCORES[tk][3] else 0.5 * v for tk, v in w.items())
         if a > cap_a:
             for tk in w:
-                if SCORES[tk][3]:
-                    w[tk] *= cap_a / a
+                w[tk] *= cap_a / a
         return w
 
     lo, hi = 1.0, 50.0
