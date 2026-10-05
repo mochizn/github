@@ -1,10 +1,13 @@
 # agent3 ノート（米国株＋台湾・中国参考）
 
-## 最新の要点（R8 終了時, 2026-10-05）
-- R8: **stocks/CRDO.md**（$210.17・時価 $39.5B、FQ1'27 +115%・GM 68%、FY28 PER 約23倍、ベータ 3.23、上位4社 84%）。**agent5 の「CRDO はヘッジに使わない」に同意＋根拠追加**: CRDO 自身の光関連売上が FY27 に $600M 超（売上の約3割）で逆相関が弱い、ベータが高い、顧客集中が AAOI 並み
-- **stocks/POET.md**（$7.79・時価 $1.35B・現金 $796M、四半期売上 $0.6M、2026-05 の $400M 募集価格 $21 から −63%、空売りレポートと訴訟報道）→ **投機枠の候補にもしない（監視のみ）**。トリガー: 800G 光エンジン量産出荷・Lumilens $50M 出荷・四半期売上 $10M 超
-- AAOI 株価（A1）・FN 株価（F4）を ✔ に（agent4 R7）。agent4 の C6（§2.3 の未照合数値の出典）は board/requests/agent3-8-1.md で agent5 に出典を渡した
-- 新規出典 約10 / 新規主張 約25 / 次ラウンド: agent4 の CIEN・MRVL 照合結果の反映、最終ラウンドの仕上げ（新しい主張は書かない）
+STATUS: DONE
+
+## 最新の要点（R9 最終, 2026-10-05）
+- R9（最終・新しい主張なし）: agent4 R8 の ✘ を反映 — **CIEN 株価 $379.14 → 終値 $391.34**（時価総額 $55.5B、EV $55.9B、EV/年率売上 8.0倍、FY27 PER 38〜40倍、高値比 −38.6%）、**MRVL 純負債 $4B → $1.07B**・株価 $272.29。stocks/CIEN.md・MRVL.md・_US_COMPARE.md・_US_EARNINGS_PREVIEW.md を訂正
+- LITE FY28 $34.52・COHR FY28 $13.96〜14.29・FN FY28 $21.52 の ✔（agent4 R8）を各カードの最終点検行に反映
+- REPORT 内の agent3 由来の数値を照合 → 修正依頼は board/requests/agent3-9-1.md（CIEN の時価総額・倍率、MRVL 純負債、任意で ✔ の追加、CRDO/POET の一言評価の素材）。LITE/COHR/AAOI/FN の数値・価格表は stocks/ と一致を確認
+- 担当成果物: stocks/LITE・AAOI・COHR・FN・CIEN・MRVL・CRDO・POET.md、stocks/_US_COMPARE.md、stocks/_US_EARNINGS_PREVIEW.md、本ノートの米国ユニバース表と §2 完成文
+- 残る ⚠（未照合のまま確定）: LITE の FCF・転換社債残高・優先株条件、FN 純現金、CIEN・MRVL の業績・ガイダンス、CRDO・POET の全項目、COHR の 10% 顧客比率
 
 ## §2 用の完成文（米国株）— agent5 が REPORT §2 にそのまま使える素材（R6, 2026-10-05）
 （数値はすべて [二次]、基準日 2026-10-02 終値。倍率は agent3 の計算 [推測]。詳細は stocks/_US_COMPARE.md と各カード）
