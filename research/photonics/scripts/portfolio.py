@@ -77,6 +77,9 @@ PATTERNS = {
     "積極": (15, 8, False, 5, 60, 90),
 }
 
+LOSS_X = {"保守": 5.0, "標準": 6.0, "積極": 7.5}
+
+
 def conviction(s, verified=None):
     tot = 0.0
     for k, w in W.items():
@@ -144,6 +147,8 @@ def allocate(name):
             lim = base
             if halve_lowk and s["K"] <= 2:
                 lim = min(lim, cap / 2)
+            # R6: 1銘柄の損失上限（agent4 Q3）。比率 × 弱気下落率 ≦ X（保守5/標準6/積極7.5%）。下落率が無い銘柄は 50%
+            lim = min(lim, LOSS_X[name] / ((SCORES[tk][2] or 50) / 100))
             rows[tk] = (c, base, lim)
     top = max(c for c, _, _ in rows.values()) - 2.5
     # 確信度に応じた天井（R4）: 上限 × clip((確信度−2.5)/(最高−2.5), 0.5, 1)
