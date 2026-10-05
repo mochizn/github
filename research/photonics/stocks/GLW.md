@@ -1,6 +1,6 @@
 # GLW — Corning Incorporated（NYSE: GLW）【簡易カード: 光通信セグメント中心】
 
-- 担当: agent1（R4 作成、リーダー R4 指示）/ 状態: v0.1 簡易
+- 担当: agent1（R4 作成、リーダー R4 指示）/ 状態: **v1.0 最終（R9）**。agent4 照合（notes/agent4.md G1〜G4）を反映
 - **全数値 [二次]**（SEC/IR は ENV.md の通り到達不可。WebSearch 要約経由、URL 併記）。計算は [推測：計算]
 - 会計年度: 暦年（12月末）。「core」は会社定義の調整後指標（non-GAAP）
 - 株価基準日: **2026-10-02 終値**（DECISIONS.md）
@@ -8,15 +8,15 @@
 ## 0. 戦略用データ
 | 項目 | 値 | 確度・注記 |
 |---|---|---|
-| 株価 | **$164.19**（前日比 +2.35%） | [二次] WebSearch 要約（cnn/investing 系）2026-10-02 終値 |
+| 株価 | **$164.19**（前日比 +2.35%） | [二次] WebSearch 要約（cnn/investing 系）2026-10-02 終値。**✔（agent4 G4）** |
 | 発行済株数 | 8億6,139万株 | [二次] 同上 |
-| 時価総額 | **約$141.4B**（株数×株価） | [推測：計算]。要約の表示 $141.43B と一致 ✔。別表示の $148.76B は日付・株数の定義違いとみて不採用 ⚠（agent3 ユニバース表の $148.8B もこちら） |
+| 時価総額 | **約$141.4B**（株数×株価） | [推測：計算]。要約の表示 $141.43B と一致。**✔（agent4 G4: $141.4B 採用、$148.8B は不採用）** |
 | 純有利子負債 | 約$6.2B（2026年予想） | [二次] https://www.marketscreener.com/quote/stock/CORNING-INCORPORATED-12788/valuation/ |
 | EV | **約$147.6B** | [推測：計算] 時価＋純負債 |
-| 光関連売上比率 | 光通信セグメント **約44%**（2026Q2: $2.07B / 全社 core 売上 $4.74B）。うち Enterprise（データセンター/生成AI向け）が成長の中心（Q2 +65%） | [二次] Q2 決算要約 / [推測：計算] |
+| 光関連売上比率 | 光通信セグメント **約44%**（2026Q2: $2.07B / 全社 core 売上 $4.74B）。うち Enterprise（データセンター/生成AI向け）が成長の中心（Q2 +65%） | [二次] Q2 決算要約 **✔（agent4 G1）** / [推測：計算] |
 | 光通信の利益寄与 | 2025年 セグメント純利益 約$1.0B。2026Q2 は $438M（純利益率 21.2%） | [二次] 原典URL=https://www.sec.gov/Archives/edgar/data/24741/000002474126000253/glw-20260728xex99xq22026.htm |
-| 直近四半期（全社） | 2026Q2: core 売上 $4.74B（+17%）、core EPS $0.78（+30%） | [二次] https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx |
-| 次四半期ガイダンス | 2026Q3: core 売上 $4.9〜5.0B、core EPS $0.85〜0.89 | [二次] qz.com / yahoo（Q2 決算後「ガイダンスで株価下落」） |
+| 直近四半期（全社） | 2026Q2: core 売上 $4.74B（+17%）、core EPS $0.78（+30%） **✔（agent4 G2）** | [二次] https://investor.corning.com/news-and-events/news/news-details/2026/Cornings-Strong-Second-Quarter-2026-Financial-Results1-Demonstrate-Progress-on-Recently-Upgraded-Springboard-Plan/default.aspx |
+| 次四半期ガイダンス | 2026Q3: core 売上 $4.9〜5.0B、core EPS $0.85〜0.89 **✔（agent4 G3）** | [二次] qz.com / yahoo（Q2 決算後「ガイダンスで株価下落」） |
 | コンセンサス EPS（core） | 2026年 $3.19〜3.28、2027年 $4.22〜4.36（ソースにより差） | [二次] yahoo/marketscreener 要約。2ソースで約3%差 ⚠ |
 | 予想PER | 2026年 **約50〜51倍**、2027年 **約38〜39倍** | [推測：計算]。gurufocus の Forward PE 48.67（2026-08-18）と概ね整合 |
 | EV/売上 | 2026Q3 ガイド年率（約$19.8B）で **約7.5倍** | [推測：計算] |
@@ -72,7 +72,8 @@
 ## 7. 未確認・次ラウンド
 - 2026Q1 光通信の純利益、全社の上位顧客比率、次回決算日、90日ボラ
 - Enterprise と Carrier の売上内訳（金額）
-- 時価総額の2つの表示（$141.4B / $148.8B）の差の原因 → agent4 照合候補
+- ~~時価総額の2つの表示の差~~ → R5 で agent4 が $141.4B を ✔（解消）
+- **最終（R9）**: 上記の未取得項目（2026Q1 光通信純利益、上位顧客比率、次回決算日、90日ボラ、Enterprise/Carrier 内訳、2028年 EPS コンセンサス）は **⚠未確認で確定**。次回決算日は agent3 の stocks/_US_EARNINGS_PREVIEW.md を参照
 
 ## 8. シナリオ値の材料（R5、agent5-4-1 回答）[推測]
 - 2028年 EPS: 弱気 $3.0 / 中立 $5.0 / 強気 $6.5（BofA 単独の暦年2028予想）。コンセンサスは ⚠未取得
