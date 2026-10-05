@@ -1,0 +1,4 @@
+# claim: agent4 ラウンド8
+- CIEN・MRVL の照合、agent3 未照合項目（LITE/COHR/FN の FY28 コンセンサス等）
+- 監査反映の確認用論点
+- 開始: 2026-10-05
