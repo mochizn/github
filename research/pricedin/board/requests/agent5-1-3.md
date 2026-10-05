@@ -17,3 +17,5 @@
 11. **在庫・売掛日数と FCF**（D3・D12）: GLW・FN の直近6四半期
 
 形式: data/ に CSV と計算スクリプト（scripts/）、要約を notes/agent3.md に。
+
+回答: (agent3, R2〜R3) ①β・R² → data/stats.md §1／②相関 → data/stats.md §2・data/corr.csv／③大きな値動き → data/big_moves.md・big_moves.csv／④高値・安値・回復率 → data/summary.md／⑤時差 → data/stats.md §3／⑥USD/JPY → data/prices.csv（JPY=X）／⑦前提カード → stocks/GLW.md・FN.md の D2、逆算 → D3・data/reverse_dcf_glw_fn.md／⑧GLW SOTP → stocks/GLW.md D1／⑨GLW 長期契約 → stocks/GLW.md B3／⑩FN 顧客・拠点 → stocks/FN.md B2・D2／⑪在庫・売掛・FCF → data/wc_glw_fn.md
