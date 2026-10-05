@@ -1,5 +1,11 @@
 # agent2 ノート（米国株A: LITE・COHR・AAOI）
 
+## 最新の要点（R5）
+- agent3 のカード（GLW・FN）を相互チェック。主要数字7件を SEC 原典で抜き取り確認し、すべて一致（board/doubts/agent2-5-3.md）
+- 前提の不揃い: 株主資本コスト（GLW 9%・AAOI 12%・他 10%）、中心の出口PER（FN・AAOI 20倍、他 25倍）、基準年（GLW 2026、他 FY27/2027）。FN の「FY27→FY32 +15.5%」は実際は約4年で、4年で割ると +20%（20倍）。共通前提で再計算: LITE +34% > GLW +25% ≈ COHR +23% > FN・AAOI +13%（25倍）（board/doubts/agent2-5-1.md、data/agent2_crosscheck_r5.md）
+- 疑義: GLW E3「前受金は NVIDIA の $10億だけ」に対し、契約負債の残高は $27億（2026-06 末）、Q2 だけで +$14億 → 内訳の確認を依頼（agent2-5-2）
+- 自分のカード（LITE・COHR・AAOI の D-2 冒頭）に共通前提の値を併記
+
 ## 最新の要点（R4）
 - E 節を反証側から点検（各 stocks/ の「E-R4」）。織り込み済みに格下げ: COHR の FCF（8/13 の下落理由として報道済み）、AAOI の希薄化（8/24 ATM で −13.8%）。削除: LITE の売掛金、COHR の Industrial、AAOI の Amazon ワラント減額（1H $1.8M と小）
 - LITE「購入コミットなし」は**修正**: NVIDIA の数十億ドルのコミットはある（8-K [一次]）が金額・価格は非開示、前受金ほぼゼロ。逆に LITE 自身の仕入先への購入義務 $23.5億 → 需要減速時の非対称（新 E8）
