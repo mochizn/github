@@ -1,6 +1,6 @@
 # COHR — Coherent Corp.（NYSE: COHR、旧 II-VI）
 
-- 担当: agent3 / 状態: R4 更新（NVIDIA 出資、ボラ・ベータ、比較表へのリンク stocks/_US_COMPARE.md）
+- 担当: agent3 / 状態: R5 更新（FY27 EPS 訂正＝agent4 ✘ 反映、FY28 コンセンサス、PhotonLink 日付）。R4 更新（NVIDIA 出資、ボラ・ベータ、比較表へのリンク stocks/_US_COMPARE.md）
 - **全数値 [二次]**（SEC/IR 到達不可、検索スニペット経由）。旧 Coherent Inc. とは別会社（2022年に II-VI が買収し社名変更、agent4 C13）
 - 会計年度: **6月期**。FY2026 = 2026-06-30 期末
 - 株価基準日: **2026-10-02 終値**
@@ -16,7 +16,7 @@
 | AI-DC 光関連売上比率 | Datacenter & Communications $1.62B / 売上 $2.05B = **79%**（FY26 Q4）。うち通信（テレコム）を除く DC 比率は ⚠未取得 | [二次] セグメント開示 |
 | 売上・利益率 | §2 の表 | |
 | 次四半期ガイダンス | FY27 Q1（2026-09 期）: 売上 $2.2〜2.4B（中央値 $2.3B、前年比 約+46%）、non-GAAP GM 39.5〜41.5%、non-GAAP EPS $1.85〜2.05（中央値 $1.95） | [二次] 市場予想との差 ⚠未取得 |
-| 予想PER（non-GAAP） | FY27 コンセンサス EPS **$9.41 → 約36倍**（別ソースは $7.61 → 約44倍。FY26 実績 $5.61 から「+57.6%で $7.61」は計算が合わないため ⚠） | [二次] barchart/zacks 系 |
+| 予想PER（non-GAAP） | **R5 訂正**: FY27（2027-06期）コンセンサス EPS **$9.44〜9.56（レンジ $8.09〜10.77）→ 約35倍**／FY28 コンセンサス **$14.07〜14.29（レンジ $11.15〜17.44）→ 約24倍**。R3〜R4 で併記した $7.61 は ✘（agent4）で**削除** | [二次] stockanalysis 系・別ソースで2系統一致 https://stockanalysis.com/stocks/cohr/forecast/ |
 | ガイド年率 non-GAAP PER | $1.95 × 4 = $7.80 → **約43倍** | [推測：年率換算] |
 | 実績 non-GAAP PER | FY26 $5.61 → 約60倍 | [推測：計算] |
 | GAAP TTM PER | ⚠未取得（Q4 の GAAP EPS $1.19 のみ取得。報道の TTM PER 160〜189倍は 2026-07〜08 時点） | agent4-r1-1 への回答 |
@@ -28,7 +28,7 @@
 | ベータ・52週・下落率 | ベータ 2.10（5年月次, 対S&P）、52週 $108.19〜$440.00、現値は高値比 −23.4%。2026年6〜9月に $417.43 から約 −36%（8〜9月の光関連一斉調整）、9/29 以降反発。90日ボラ・空売りは ⚠未取得 | [二次] https://247wallst.com/investing/2026/09/03/coherent-fell-hard-over-3-months-it-will-nearly-double-according-to-these-analysts/ |
 | 次回決算日 | ⚠未確定（前年の Q1 は 11-05 発表 → **2026-11 上旬** [推測]） | |
 | アナリスト目標株価 | 平均 $415.36（23人、レンジ $280〜500） | [二次] barchart（S&P Global） |
-| CPO 移行で得か損か | **中立**: トランシーバ（プラガブル）が最大事業で CPO では侵食される側。一方で InP レーザー（6インチ化でコスト優位）、CPO 向け売上が「今後数四半期で開始」、PhotonLink（2026-10-01 発表）で光エンジン側にも参入 [推測]（agent1-1-1 への回答） | |
+| CPO 移行で得か損か | **中立**: トランシーバ（プラガブル）が最大事業で CPO では侵食される側。一方で InP レーザー（6インチ化でコスト優位）、CPO 向け売上が「今後数四半期で開始」、PhotonLink（2026-08-25 予告、**2026-09-21 ECOC で発表**、CPO 10社超・NPO 10社超と協議中、売上は暦年 2026年10-12月期から立ち上げ）で光エンジン側にも参入 [推測]（agent1-1-1 への回答） | |
 
 ## 1. 事業と光関連エクスポージャ
 - セグメント（FY26 Q4）[二次]:
@@ -61,7 +61,8 @@
 - CEO（Jim Anderson）: 「6月四半期の InP レーザー生産は前年比 約80%増」「今四半期の DC 売上の前年比成長は 80% を超える見込み」 https://finance.yahoo.com/technology/ai/articles/coherent-q4-earnings-call-highlights-140000926.html
 - 6インチ InP 製造への移行で 800G/1.6T の能力を増強
 - 800G は暦年 2026 も前年比成長、1.6T は 2026年後半〜2027年に急拡大
-- 2026-10-01: AI データセンター向け光プラットフォーム「PhotonLink」を発表、Bernstein が Outperform で新規カバー → 株価 +10% [二次] https://247wallst.com/investing/2026/10/01/coherent-jumps-10-on-photonlink-push-and-bernsteins-outperform-start-lumentum-rises-9-corning-advances-3/
+- **PhotonLink**（R5 訂正: 発表日は **2026-09-21**、ECOC。8-25 に予告）: 光源・ビーム整形から送受信・電気変換までの統合光プラットフォームで CPO/NPO に対応。**CPO で10社超・NPO で10社超の顧客と協議中、売上は暦年 2026年10-12月期から立ち上げ** [二次] https://www.globenewswire.com/news-release/2026/09/21/3365854/11543/en/coherent-launches-photonlink-integrated-optics-platform-for-ai-infrastructure.html
+- 2026-10-01: Bernstein が Outperform で新規カバー、PhotonLink の再評価と合わせて株価 +10%（10-01 は発表日ではない）[二次] https://247wallst.com/investing/2026/10/01/coherent-jumps-10-on-photonlink-push-and-bernsteins-outperform-start-lumentum-rises-9-corning-advances-3/
 
 ## 4. 逆算DCFの材料（agent5 用）[推測：条件]
 - 株価 $337.04 / 株数 1億9,583万（優先株転換済み）/ 純有利子負債 $1.24B / FY26 売上 $7.12B / Q1 年率 $9.2B / 会社目標の年率 $12B（FY27 末）/ non-GAAP OPM 20.5%（FY26）→ 21.8%（Q4）
@@ -90,5 +91,6 @@
 ## 7. 未確認・次ラウンド
 - [ ] 10% 顧客の比率、地域別売上（中国比率）
 - [ ] GAAP TTM EPS、FCF
-- [ ] FY27 コンセンサス EPS の食い違い（$7.61 vs $9.41）— R4 は追加ソースなし。$9.41 を主に、⚠ のまま
+- [x] FY27 コンセンサス EPS → $9.44〜9.56 で確定（R5）。FY28 $14.07〜14.29
+- [ ] 10% 顧客の比率: R4・R5 とも取れず → **⚠未確認で確定**（PROTOCOL）
 - [ ] 航空宇宙・防衛事業の売却時期と金額

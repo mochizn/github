@@ -62,7 +62,7 @@
 
 ## 2a. NVIDIA の出資（2026-03-02、R4 追記）[二次]
 - NVIDIA が **Series A 転換優先株 2,876,415株を $695.31 で取得（$2B）**＋複数年の購入コミット（数十億ドル規模）と先進レーザーの能力確保権。米国内の製造・R&D・能力増強に充当 https://www.theglobeandmail.com/investing/markets/stocks/LITE/pressreleases/545805/lumentum-raises-2-billion-deepens-nvidia-strategic-partnership/ 、https://www.cnbc.com/2026/03/02/nvidia-investment-coherent-lumentum.html （COHR と同日、各 $2B）
-- 株数への影響: 優先株が普通株に1:1で転換すると +約288万株 [推測：転換比率未確認]。基本株 8,860万株には含まれず、希薄化後 約1.01億株には含まれていると推測 [推測]
+- 株数への影響（R5 確認）: 優先株は**保有者の選択で普通株に1:1で転換**（HSR 法の待機期間の終了が条件。適格な売却の直前には自動転換）、配当は普通株と同等（転換後ベース）[二次] 8-K https://www.sec.gov/Archives/edgar/data/1633978/000119312526085412/d41019d8k.htm （スニペット経由）、https://www.tipranks.com/news/company-announcements/lumentum-raises-2-billion-deepens-nvidia-strategic-partnership → **+287.6万株**。基本株 8,860万株には含まれない。希薄化後 約1.01億株には含まれていると推測 [推測]（会計上は参加型優先株として希薄化計算に入るのが通常）
 - 現金 $2.7B（FY26 期末）にはこの $2B の残りが含まれる [推測]
 - 含意: 10% 顧客（A 26.6%）が NVIDIA である可能性が高まる（依然 [推測]）。購入コミットは需要の下支えだが、顧客＝株主で交渉力が偏る
 
