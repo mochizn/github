@@ -14,6 +14,8 @@
 import os
 import sys
 
+sys.dont_write_bytecode = True  # photonics/scripts/__pycache__ を汚さない
+
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "photonics", "scripts"))
 from reverse_dcf import implied_growth  # noqa: E402
 
