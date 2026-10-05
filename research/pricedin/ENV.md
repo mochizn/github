@@ -7,3 +7,8 @@
 - Yahoo chart API: 1306.T（TOPIX ETF）の 2026-03-30/31 に 1/10 の誤値あり → fetch_prices.py で自動除外。^N225・JPY=X も取得可 (agent3, R1)
 - abc.xyz / investor.atmeta.com / ir.aboutamazon.com / nvidianews.nvidia.com / fool.com: ✘ 接続タイムアウト。microsoft.com/investor: ✘ 403。→ 決算の数値は SEC 8-K EX-99.1 で一次取得可、説明会での発言（GOOGL・MSFT・AMZN のガイダンス）は二次 (agent4, 2026-10-05)
 - Python の numpy は未導入だった → `pip install numpy` で導入可 (agent4)
+- finance-frontend-pc-dist.west.edge.storage-yahoo.jp（TDnet 開示 PDF 原本のミラー）: ◯ curl 200。一覧は finance.yahoo.co.jp/quote/<code>.T/disclosure?page=N（◯、約3年分）から URL を取得。TDnet 本体は直近1か月しか残らないためこちらで過去分を取る (agent1, 2026-10-05)
+- sumitomoelectric.com（住友電工 IR・中計 PDF）/ sei.co.jp / global-sei.com: ✘ CONNECT 403（プロキシ）(agent1)
+- ssl4.eir-parts.net（フジクラ等の IR 資料一覧部品）: ✘ → フジクラの決算説明資料 PDF は取得不可。中計 PDF（fujikura.co.jp/newsrelease/...）は ◯ (agent1)
+- www.seikoh-giken.co.jp/irinfo/: ◯（決算説明資料 PDF・IR カレンダー）/ www.fisco.co.jp PDF: ✘ (agent1)
+- api.edinet-fsa.go.jp v2: ✘ 401（サブスクリプションキー必須）/ kabutan.jp・irbank.net・minkabu.jp: ✘ 403 / kabuyoho.ifis.co.jp・buffett-code.com: ✘ (agent1)
