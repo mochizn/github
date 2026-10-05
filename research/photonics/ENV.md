@@ -6,3 +6,5 @@
 - stockexpress.jp: ✘ WebFetch blocked (agent2, 2026-10-05)
 - www.release.tdnet.info / disclosure2.edinet-fsa.go.jp / irbank.net / minkabu.jp / finance.yahoo.co.jp / www.jpx.co.jp / stooq.com / query1.finance.yahoo.com: ✘ curl CONNECT 403 (agent2, 2026-10-05)
 - 迂回: WebSearch は動作（検索結果スニペットのみ。[二次]扱い）(agent2, 2026-10-05)
+- fred.stlouisfed.org / www.ecb.europa.eu / www.federalreserve.gov / www.sec.gov / www.boj.or.jp: ✘ curl CONNECT 403・WebFetch EGRESS_BLOCKED (agent5, 2026-10-05)
+- www.tradingkey.com: ✘ WebFetch blocked (agent5, 2026-10-05)
