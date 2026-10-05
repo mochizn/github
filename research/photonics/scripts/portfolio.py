@@ -48,9 +48,10 @@ SCORES = {
 # 株価（2026-10-02）と REPORT §4.3 のシナリオ値（約2年後, 割引なし）: (株価, 弱気, 中立, 強気)
 PRICES = {
     # agent5 の値（REPORT §4.3）
-    "5803": (5598, 2510, 5230, 7600),
+    # R6: 中立の利益成長を +10%/年 → +15%/年（訂正後の設備投資コンセンサス +38〜50% に合わせる。agent4 §13.3）
+    "5803": (5598, 2510, 6240, 8440),
     "LITE": (1085.42, 355, 863, 1400),
-    "6834": (6850, 2780, 6220, 10330),
+    "6834": (6850, 2780, 7350, 10330),
     "AAOI": (115.59, 46.5, 110, 240),
     # R5: 担当の材料に置き換え。COHR・FN は agent3（stocks/_US_COMPARE.md §5）、COHR の弱気は agent4 §11
     "COHR": (337.04, 155, 312, 487),
@@ -104,7 +105,8 @@ def deploy_fraction(tk, alt=False):
     """R5: 価格表を agent4 §10 論点2 に合わせて下げた。
     1/3: 株価 ≤ 確率加重値（期待 ±0 以上） / 2/3: ≤ 確率加重値÷1.15 / 全部: ≤ 確率加重値÷1.30
     論点1: 含意CAGR が比較成長率 +25pt 超の銘柄は新規に買わない
-    取り逃がし対策（リーダー R5 論点b）: 補正後確信度 ≥ 3.5 かつ V ≥ 4 の銘柄は、価格にかかわらず目標の 1/4 を持つ
+    取り逃がし対策（R6 で agent4 §13.6-3 に合わせて変更）: 補正後確信度 ≥ 3.5 かつ V ≥ 4 で、
+    確率加重値が株価の −10% 以内の銘柄は、価格にかかわらず目標の 1/6 を持つ（打診枠）
     alt=True は感応度（R5: 弱気寄りの確率 30/50/20）"""
     if tk not in PRICES:
         return 0.0
@@ -121,9 +123,15 @@ def deploy_fraction(tk, alt=False):
     else:
         f = 0.0
     s, ver, _, _ = SCORES[tk]
-    if conviction(s, ver) >= 3.5 and s["V"] >= 4:
-        f = max(f, 0.25)
+    if conviction(s, ver) >= 3.5 and s["V"] >= 4 and w >= p * 0.9:
+        f = max(f, 1 / 6)
     return f
+
+
+def implied_bull(tk, bear_p=0.25):
+    """市場の株価が織り込む強気の確率（弱気の確率を固定し、残りを中立と強気で分ける）。agent4 §13.5"""
+    p, b, n, u = PRICES[tk]
+    return (p - bear_p * b - (1 - bear_p) * n) / (u - n)
 
 
 def allocate(name):
@@ -184,6 +192,8 @@ if __name__ == "__main__":
             pr = "— | — | — | — | —"
         print(f"| {tk} | {conviction(s):.2f} | {conviction(s, ver):.2f} | {downside_factor(tk):.2f} | {pr} | "
               f"{deploy_fraction(tk):.2f} | {deploy_fraction(tk, alt=True):.2f} |")
+    print()
+    print("市場が織り込む強気の確率（弱気 25% に固定）: " + ", ".join(f"{tk} {implied_bull(tk):.0%}" for tk in PRICES))
     print()
     for name in PATTERNS:
         w = allocate(name)
