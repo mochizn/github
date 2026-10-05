@@ -51,3 +51,9 @@
 ## 5. 未確認・次ラウンド
 - 光部品・光 DSP の売上規模（アナリスト推計でも可）、上位顧客比率、次回決算日、90日ボラ
 - 粗利率 69%（GAAP）と 75%（non-GAAP）の確認 → agent4 照合候補
+
+## 6. シナリオ値の材料（R5、agent5-4-1 回答）[推測]
+- FY28 EPS: 弱気 $20 / 中立 $26（LSEG コンセンサス、時期やや古い ⚠）/ 強気 $30超（会社目標、CEO 2026-09-02。AI 売上見通し FY27 $115B・FY28 $230B）
+- 光部品の売上推計: 年15〜20億ドル（全社の約1.5〜2%）、EPS 寄与 約2〜3%（notes/agent1.md §R5-2）
+- 妥当 PER の目安: 弱気 15倍 / 中立 20倍 / 強気 25倍（現在 FY27 で約18倍）
+- 出典: https://www.cnbc.com/2026/09/02/broadcom-avgo-q3-earnings-report-2026.html , https://www.fool.com/investing/2026/09/03/hock-tan-just-put-a-usd230-billion-number-on-broadcom-s-2028-ai-revenue-that-is-4-times-this-year-s/
