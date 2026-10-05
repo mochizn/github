@@ -1,9 +1,10 @@
 # agent3 ノート
 
 ## 最新の要点
-- R3: 逆算 scripts/reverse_dcf_glw_fn.py → data/reverse_dcf_glw_fn.md。stocks/GLW.md・FN.md の D3（株価が要求する水準 vs 会社・アナリスト）を作成
-- GLW: 株価は 2031年 売上 $50〜80B（会社計画 2030年末 年率 $40B の 1.2〜2倍）、または計画どおりで FCF マージン 20%超を要求。出口25倍なら 2031年 純利益 $8.7B（EPS 約$10）。**期間と利益率を楽観**
-- FN: 株価は FY27 コンセンサス（EPS $18.20、+29%）を受け入れ、**FY28 以降は純利益 CAGR 10〜15% への減速**を織り込む（出口20倍）。FCF が出ない限り割安とは言えない。**数量の持続性を悲観**（agent2 集計: 他3社の DC 売上 +$1.17B/四半期に対し FN datacom は減少）
+- R4: data/earnings_reaction.md（8社×4回の決算反応）。「上振れでも決算日に下落」は GLW 4/4・FN 3/4・COHR 3回連続に固有で、LITE（平均 +8.5%）・AAOI（+13.5%）・精工技研・住友電工は上がる。日米の差より「上振れの大きさ」「株価の先回り」で説明できる
+- R4: GLW の前受金 $10億は NVIDIA（2029年末まで）。$180 ワラントは無償付与で公正価値 $2.96億を売上から控除。Meta・Amazon 等の前受金は開示なし → 光部分の高倍率を「前受金」で説明できるのは一部
+- R4: FN の Amazon ワラント確定の増分が Q4 に減少（21,010→15,280、按分で Amazon 売上 約−27%）[推測]。Datacom 減は報道・アナリストが既に言及＝織り込み済みに格下げ。上振れ候補は新規 datacom 顧客・1.6T
+- R3: 逆算（data/reverse_dcf_glw_fn.md）。GLW は期間と利益率を楽観、FN は FY28 以降の数量を悲観
 - R2: GLW・FN の A・C、data/stats.md・corr.csv・wc_glw_fn.md。フジクラ×GLW の時差補正相関 0.56
 - 再実行: `python3 scripts/fetch_prices.py`、`python3 scripts/stats.py`、`python3 scripts/reverse_dcf_glw_fn.py`
 
@@ -24,3 +25,9 @@
 - 逆算: DCF（FCF ベース）と出口PER の2法。GLW は FCF マージン 10%→10/14/18%、WACC 8〜10%。FN は 3%→4/6/8%、WACC 9〜11%。FN は FCF 転換が低いので DCF の要求が過大に出る → 出口PER の方を主に解釈
 - board: agent5-1-3 に回答場所を追記、agent2-2-1（FN datacom 突き合わせ）を FN E1 に反映
 - 未了: GLW 6/18・6/25 の上昇理由、FN 10-K の関税・タイ集中のリスク要因の精読、GLW の長期（2028年以降）のコンセンサス
+
+## R4 作業ログ
+- scripts/earnings_reaction.py → data/earnings_reaction.md・csv（精工技研 08-11 は祝日のため 08-12）
+- GLW: B3 訂正（NVIDIA 契約の会計、10-Q Note 2・12）、E を表形式に（方向・時期・織り込み済みの証拠・判定）、C4 目標の更新状況
+- FN: B2 に Amazon ワラント推移と datacom 減少の説明、E を表形式に、C4
+- board: agent5-3-3 に回答
