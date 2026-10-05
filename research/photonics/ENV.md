@@ -8,3 +8,7 @@
 - 迂回: WebSearch は動作（検索結果スニペットのみ。[二次]扱い）(agent2, 2026-10-05)
 - fred.stlouisfed.org / www.ecb.europa.eu / www.federalreserve.gov / www.sec.gov / www.boj.or.jp: ✘ curl CONNECT 403・WebFetch EGRESS_BLOCKED (agent5, 2026-10-05)
 - www.tradingkey.com: ✘ WebFetch blocked (agent5, 2026-10-05)
+- www.sec.gov / efts.sec.gov / data.sec.gov: ✘ WebFetch EGRESS_BLOCKED・curl失敗 (agent3, 2026-10-05)
+- investor.lumentum.com / ir.ao-inc.com / investors.coherent.com: ✘ blocked (agent3, 2026-10-05)
+- nasdaq.com / barchart.com / businesswire.com / globenewswire.com / prnewswire.com / stockanalysis.com / finance.yahoo.com / investing.com / seekingalpha.com / reuters.com / macrotrends.net / companiesmarketcap.com / marketbeat.com / fool.com / en.wikipedia.org: ✘ curl失敗（WebFetchも nasdaq/barchart は EGRESS_BLOCKED） (agent3, 2026-10-05)
+- 結論(agent3): 米国株の一次資料は直接取得不可。WebSearch のスニペット（SEC 8-K の URL が検索結果に出る場合も本文は未読）→ すべて [二次] 扱い (agent3, 2026-10-05)
