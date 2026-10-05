@@ -1,11 +1,17 @@
 # agent1 ノート（業界・技術）
 
-## 最新の要点（R1, 2026-10-05）
-- 環境: 直接取得（curl/WebFetch）はIR・SEC・TDnet・株価サイトとも全滅（egress 403）。**使えるのは WebSearch の要約のみ** → 本研究の数値は原則 [二次]。原典URL併記＋2ソース一致で信頼度を上げる運用を提案（board/issues/agent1-1-1.md）
-- 利益の溜まり場（暫定・[推測]）: ①InPレーザー（EML/CWレーザー: 供給不足30%超、Lumentum/Coherent/三菱電機）②DSP（Marvell+Broadcomで9割超）③CPO光エンジン＋先端パッケージ（TSMC COUPE）④ファイバ/コネクタ（プリフォーム増設に18〜24ヶ月、フジクラ・Corning）。モジュール組立は中国勢上位寡占だが粗利46〜49%と現状は高水準
-- ロードマップ: 2026=1.6T元年＆CPO量産初期（NVIDIA Spectrum-X Photonics出荷開始、Broadcom TH6-Davisson）、本格拡大は2027-28（TrendForce）、スケールアップ光化はFeynman世代（2028）。CPO/NPO市場 2025年約1億ドル→2030年390億ドル超（TrendForce）
-- 需要起点: 米4社ハイパースケーラ設備投資 2026年 約7,600億ドル（2025年 約4,100億ドル）、2027年コンセンサス1兆ドル前後
-- 新規出典数 約30 / 新規主張数 約35（全て[二次]または[推測]）/ 次ラウンド: (a)レイヤー別の利益率表を各社決算で定量化（GM/OPM）、(b)CPO移行で「誰が何を失うか」（プラガブル・DSP・モジュール組立の侵食量）の試算、(c)中国勢との競争・関税
+## 最新の要点（R2, 2026-10-05）
+- **利益プール（§R2-1）**: 直近四半期の粗利率は TSMC 67.7% > Arista 63.4% > Marvell 58.9% > Lumentum 50.4% > Eoptolink 48.5% ≈ Innolight 46% ≈ Ciena 46.4% > Coherent 40.2% > AAOI 29.8% > Fabrinet 12.2%。**中国2強の純利益率(33〜36%)は Coherent の営業利益率(21.8%)を上回る** → 「モジュール組立＝低収益」は現時点では誤り。利益は「規模＋1.6T先行＋内製SiPh」を持つ組立大手にも溜まっている
+- **CPOの侵食試算（§R2-3）**[推測]: CPOはまずスイッチ側だけを置き換えるため、トランシーバ数量の減少は「CPO比率×約50%」が上限。2028年にスケールアウトのCPO比率10〜30%なら数量減は5〜15%程度で、スケールアップ光化の新規需要が相殺し得る。本当の侵食はNIC/GPU側もCPO化する2029年以降。最も確実に失うのはDSP（スイッチ側で100%不要）
+- **中国・関税（§R2-4）**: FCCの最終規則（2026-09-11官報）は光モジュールを個別指定せず、Innolight/Eoptolink/TFCは対象外 → 「全面禁止」シナリオは一旦後退。残るリスク: 上院の連邦調達禁止法案（5年猶予）、国防総省1260HリストへのInnolight追加（2026/6）、中国のInP輸出規制（6インチウエハ価格+250%）
+- ロードマップ時期表を agent5 向けに作成（§R2-2）。agent5-1-1 の1・2は回答済み（board/requests/agent1-2-1.md）。依頼3（四半期設備投資表）・5（過去サイクル）・6（R採点）は R3
+- 新規出典 約25 / 新規主張 約30（[二次]、試算は[推測]）/ 次ラウンド: ハイパースケーラ四半期設備投資表、過去サイクル比較、ロードマップ耐性 R の採点案
+
+## R1 要点（アーカイブ）
+- 環境: 直接取得は全滅、WebSearch 要約のみ → 数値は原則 [二次]（✔基準は DECISIONS.md の agent4 基準をリーダーが正式採用。R1要点で触れた board/issues/agent1-1-1.md は作成していない＝agent4 基準と重複のため取り下げ）
+- 利益の溜まり場（R1仮説）: InPレーザー・DSP・CPO光エンジン＋先端パッケージ・ファイバ/コネクタ
+- ロードマップ: 2026=1.6T元年＆CPO量産初期、本格拡大2027-28、スケールアップ光化2028（Feynman）
+- 需要起点: 米4社設備投資 2026年 約7,600億ドル
 
 ---
 
@@ -109,3 +115,90 @@
 4. 過去サイクル（2000-01年光バブル、2018-19年400G調整）との比較材料（agent5依頼5）
 5. agent5依頼3: ハイパースケーラ四半期設備投資 2024Q1〜最新の表（+Oracle）
 6. agent5依頼6: 銘柄別ロードマップ耐性 R=1〜5 の採点案
+
+
+---
+
+## R2（2026-10-05）
+
+### R2-1. 層別の利益プール表（各社GM/OPMの定量化）— agent5-1-1 依頼1への回答
+期は各社の直近開示四半期。会計年度に注意（LITE/COHR/FN=6月末、MRVL=1月末、AVGO=10月末）。粗利率は特記なき限り non-GAAP。
+
+| 層 | 企業 | 期 | 売上 | 粗利率 | 営業利益率（または純利益率） | タグ/出典 |
+|---|---|---|---|---|---|---|
+| L1 | Corning 光通信セグメント | 2026Q2 | 20.7億ドル(+32%) | — | セグメント純利益 4.38億ドル＝**21.2%**（内部整合: 438/2,070 ✔） | [二次] 原典URL=https://www.sec.gov/Archives/edgar/data/24741/000002474126000253/glw-20260728xex99xq22026.htm |
+| L1 | フジクラ 情報通信事業部門 | 2026/3期通期 | 6,530億円 | — | 営業利益 1,527億円＝**23.4%** | [二次] R1と同じ（短信ミラー）。詳細は stocks/5803.md |
+| L2/L4/L6 | Lumentum（全社） | FY26Q4（2026/6期末） | 10.1億ドル(+109%) | **50.4%** | 営業 **36.6%**（non-GAAP） | [二次] 原典URL=https://www.sec.gov/Archives/edgar/data/0001633978/000162828026055726/lite_ex991xq4fy26.htm |
+| L2/L4 | Coherent（全社、DC&Cは売上の59%） | FY26Q4 | 20.5億ドル(+34%) | **40.2%**（FY26通期39.4%） | 営業 **21.8%**（FY26通期20.5%） | [二次] https://ir.coherent.com/news-releases/news-release-details/coherent-corp-reports-fourth-quarter-and-full-year-fiscal-2026（sec.gov上のどの8-Kが該当かは未特定） |
+| L3 | Marvell（全社、DC比率79%） | FY27Q2（2026/8） | 27.39億ドル(+37%) | **58.9%** | 営業 **36.6%**、Q4に38〜40%目標 | [二次] https://convergedigest.com/marvell-q2-fy2027-data-center-ai-revenue/ |
+| L3 | Credo（AEC/DSP） | FY26Q3（2026/1期、やや古い） | — | **68.6%** | — | [二次] 要約経由、⚠期が古い |
+| L3/L5/L6 | Broadcom（全社） | FY26Q3（2026/8/2期末） | AI半導体 167億ドル(+221%) | GAAP 69%（non-GAAP 75%との要約もあり⚠） | — | [二次] 原典URL=https://www.sec.gov/Archives/edgar/data/0001730168/000173016826000080/avgo-20260802.htm |
+| L4 | Innolight（中際旭創, 300308） | 2026年1-6月 | 417.8億元(+182%) | Q1 **46.1%**（H1は未取得） | 純利益 136.5億元＝**32.7%** | [二次] https://www.thestandard.com.hk/finance/article/340637/ |
+| L4 | Eoptolink（新易盛, 300502） | 2026年1-6月 | 209.1億元(+100%) | **48.5%** | 純利益 75.3億元＝**36.0%** | [二次] 要約経由。⚠ marketscreener見出しは「売上+283%」で不一致→要確認 |
+| L4 | AAOI | 2026Q2 | 1.919億ドル(+86%) | **29.8%**（GAAP 27.7%） | 純利益 0.055億ドル≈3% | [二次] https://investors.ao-inc.com/news-releases/news-release-details/applied-optoelectronics-reports-second-quarter-2026-results |
+| L5 | TSMC（全社） | 2026Q2 | — | **67.7%** | — | [二次] 原典URL=https://www.sec.gov/Archives/edgar/data/0001046179/000104617926000451/a2q26e_withguidancexfinal.htm |
+| L6 | Arista | 2026Q2 | — | **63.4%** | — | [二次] 要約経由 |
+| L6 | Ciena | FY26Q3（2026/7） | 16.7億ドル | **46.4%** | — | [二次] https://www.tradingview.com/news/tradingview:b7163ae57abaa:0-ciena-posts-q3-fy2026-revenue-1-67b-adjusted-diluted-eps-2-11-raises-fy26-revenue-guide/ |
+| L7 | Fabrinet（EMS） | FY26Q4（2026/6期末） | 13.16億ドル(+45%) | **12.2%** | 営業 **10.9%** | [二次] 原典URL=https://www.sec.gov/Archives/edgar/data/0001408710/000140871026000026/fn-2026811xex991q426.htm |
+
+市場全体: Cignal AI によるとデータコム光部品市場は 1Q26 に **77億ドル（前年比2倍超）**、うち Innolight 26億ドル＝34%（内部整合 ✔）。2025年通年は190億ドル超。[二次] https://cignal.ai/2026/06/datacom-optical-component-revenue-doubles-to-7-7-billion-in-1q26/ , https://cignal.ai/2026/08/fcc-ban-on-new-chinese-optical-modules/
+
+**読み取り [推測]**
+1. 粗利率の階層は「電気側シリコン（TSMC/Broadcom/Marvell/Credo 59〜75%）＞ 光チップ内製型（Lumentum 50%）≈ 中国組立大手（46〜49%）＞ 部品外部調達の組立（Coherent 40%、AAOI 30%）＞ EMS（Fabrinet 12%）」。
+2. 意外な点: 中国2強の**純利益率33〜36%**は Lumentum の営業利益率36.6%と同水準で、Coherent を上回る。現局面では組立大手も超過利潤を得ている。理由の仮説は、(a) 1.6T・800Gでの量と認定の先行、(b) SiPh/レーザーの一部内製、(c) 供給制約下の価格維持。→ **供給制約が緩むと最初に剥落するのは(c)**。L4 は「現在の利益は大きいが、持続性は最も低い」層。
+3. Fabrinet の12%は受託製造の構造的上限。量の恩恵は受けるがマージンは伸びない（L7のうちEMSは「量のベータ」）。
+4. L1 は Corning・フジクラとも営業ベースで**20%台前半**と、ケーブル事業としては歴史的高水準。供給制約（プリフォーム18〜24ヶ月）が続く限り維持されやすい。
+
+### R2-2. ロードマップ時期表 — agent5-1-1 依頼2への回答
+| 技術 | 量産開始（想定） | 根拠 | 得をする層 | 損をする層 | 確度 |
+|---|---|---|---|---|---|
+| 800G プラガブル（100G/lane） | 2024〜（主力、2026年に出荷倍増見込み） | LightCounting要約 | L4, L3, L2(EML/VCSEL) | — | [二次] |
+| 1.6T プラガブル（200G/lane, 3nm DSP） | 2025後半〜**2026が元年**（1Q26に急増、2Q26に量産出荷） | Cignal AI 1Q26/2Q26 | L2（200G EML: Lumentum先行）, L3（Marvell Ara）, L4大手 | 100G/laneしか持たない二番手 | [二次] |
+| LPO（DSPなし）/ LRO（送信側DSPのみ） | 800G LPOは限定的。1.6Tは熱の問題（>30W）でLROが現実解。「2026-28年の800G/1.6Tポートの30%超がLPO/CPO」との予測あり | IEEE EPS資料・業者ブログの要約 | L2, ドライバ/TIA（中国ローカル化） | L3（DSP） | [二次・低] |
+| CPO スケールアウト（スイッチ） | 2026年に量産出荷開始（NVIDIA Spectrum-X Photonics、Broadcom TH6-Davisson 102.4T は2026Q3前後に広範供給）、**本格拡大2027-28** | TrendForce 2026/7、ServeTheHome | L5（TSMC/SPIL/ASE）, L6（NVIDIA/Broadcom）, L2（ELSレーザー）, L1（シャッフル/高密度コネクタ）, L7（SiPhテスト） | L4（スイッチ側モジュール）, L3（DSP） | [二次] |
+| OCS（光回線スイッチ） | 2026年に外部調達で量産（Google→Lumentum/Coherent/Huber+Suhner） | Cignal AI | L6/L2（Lumentum, Coherent） | 電気スパイン・スイッチの一部 | [二次] |
+| 3.2T プラガブル | 2028年 | deepfundamental要約（Innolight先行との見方） | L4大手, L2 | — | [二次・低] |
+| スケールアップ光化（NVLink CPO） | Rubin Ultra NVL576（2027後半）でラック間に光。**Feynman（2028）でNVLink CPOスイッチ**（銅と併存） | GTC 2026 発言の報道 | L5, L2, L1。市場規模は2028-29年に急加速（CPO/NPO 2030年390億ドル超） | 銅AEC（L3のCredo等）の長期天井 | [二次] |
+| IOWN / NTT PEC-2 | 2026Q2光エンジンサンプル→**2026Q4 CPOスイッチ商用サンプル**（102.4T、Broadcom+Accton） | NTT/impress | L8, 日本の部品 | — | [二次] |
+
+### R2-3. CPO 移行の得失試算（[推測]、前提を明示）
+**モデル**: 102.4T スイッチ1台＝1.6T×64ポート。
+- プラガブルの場合: スイッチ側に1.6Tトランシーバ64本。単価は2026年末に1,500〜2,000ドルとの見方（[二次・低] vitextech ほか業者ブログ）→ **スイッチ側の光の金額 約10〜13万ドル/台**。
+- CPOの場合（TH6-Davisson）: 6.4T光エンジン×16＋外部レーザー（ELS）。光インターコネクト電力は約70%減（Broadcom）。
+- **金額の行き先**: 失う＝モジュール組立の付加価値（L4）、DSP（L3: スイッチ側で100%不要）、ケージ/コネクタの一部。得る＝光エンジン（L5: Broadcom/NVIDIA＋TSMC/SPIL）、ELSレーザー（L2: 個数は減るが高出力で単価上昇）、内部ファイバ・シャッフル・高密度コネクタ（L1）、ウエハレベル光電テスト（L7）。
+
+**数量への効き方（重要）**: CPOは当面**スイッチ側だけ**。リンクの反対側（NIC/GPU側、または相手スイッチ側がプラガブルのまま）にはトランシーバが残る（TH6-Davissonでも「フロントパネルのトランシーバは消え、リンクの遠端のモジュールに置き換わる」）。したがって
+- トランシーバ数量の減少率 ≈ CPO採用率（スケールアウトのスイッチポート比）× 約50%
+- 2028年の CPO 採用率 10〜30% と置くと、数量減は **約5〜15%**（[推測]。採用率の根拠は TrendForce「2027-28年に本格拡大」と「LPO/CPOで30%超」予測の幅）
+- 同時期にスケールアップの光化（Rubin Ultra NVL576 のラック間、Feynman の NVLink CPO）が**新規の光需要**を生むため、L4 全体の需要は2028年までは純増の可能性が高い
+- **L4 の本当の侵食は NIC/GPU 側も CPO/NPO 化する2029年以降**（Meta/Microsoft は OCI-MSA で NPO 推進、TrendForce）
+
+**層別の結論（2026→2030）[推測]**
+| 層 | CPO移行の影響 | 理由 |
+|---|---|---|
+| L1 ファイバ・コネクタ | 得 | CPOでもファイバは必要。シャッフル・高密度化で本数・付加価値が増える |
+| L2 レーザー | 中立〜得 | ELSで残る。個数↓・出力と単価↑。InP能力を持つ者（Lumentum/Coherent/三菱電機/住友電工）が有利 |
+| L3 DSP | 損 | スイッチ側DSPが不要。LPO/LROも逆風。ただし2028年まではプラガブルの量で伸びる |
+| L4 組立 | 2028まで中立、以後損 | スイッチ側が先に消える。光エンジンを内製できる大手（Innolight等）は一部を取り返す |
+| L5 SiPh/光エンジン | 大きく得 | 2025年約1億ドル→2030年390億ドル超（TrendForce） |
+| L6 スイッチ | 得 | 光の価値をスイッチ価格に取り込む（Broadcom/NVIDIA） |
+| L7 検査 | 得 | ウエハレベル光電テストは新規需要。EMS(Fabrinet)は光エンジン組立を取れるか次第 |
+
+R3 で精緻化: トランシーバ BOM の内訳（DSP・レーザー・その他）の出典付き数値、CPO 1台当たりの光エンジン価格。
+
+### R2-4. 中国勢との競争・関税・輸出規制
+| 論点 | 事実 | タグ/出典 |
+|---|---|---|
+| 中国勢のシェア | 2025年トランシーバ出荷: Innolight 23.4%（1位）、上位10社中7社が中国系。1Q26データコム光部品市場77億ドルのうち Innolight が34% | [二次] lightcounting newsletter, cignal.ai |
+| FCC の動き | 2026/8/4 ロイター「FCCが中国製の新型光トランシーバの輸入禁止を起草」→ LITE/COHR/MRVL株が8〜10%上昇。しかし**最終規則（FCC 26-50、7/23公表・8/7官報・30日後発効、さらに9/11に機器認証プログラムの規則を官報掲載）は、光モジュールを独立の対象カテゴリにせず、Innolight/Eoptolink/TFC はカバードリスト外**。対象は「カバードリスト掲載企業製のロジック部品を含む機器」に限定 | [二次] https://cignal.ai/2026/08/fcc-ban-on-new-chinese-optical-modules/ , https://finance.biggo.com/news/527f426d-2faa-4536-8c71-3772272ffdf4 （⚠ 9/11 と 8/7 の2つの日付が混在。同一規則か別規則か R3 で確認） |
+| 議会 | 上院超党派法案（McCormick/Gallego/Cornyn/Fetterman, 2026/9）「Securing National Security Systems from Chinese Optical Transceivers Act」: 国家安全保障システム向けの連邦調達から中国製トランシーバを排除。**5年の移行期間**。対象に Innolight・Eoptolink | [二次] https://www.mccormick.senate.gov/news/press-releases/senators-mccormick-gallego-cornyn-fetterman-introduce-bill-to-keep-chinese-transceivers-out-of-u-s-national-security-systems/ |
+| 国防総省 | 2026/6 に Innolight を「中国軍事企業」リスト（1260H）に追加 | [二次] executivegov 等の要約 |
+| 原産地 | 中国2強は米国向けの大半を中国国外（タイ等）で生産 → 実際の影響は原産地規則次第 | [二次] 同上 |
+| 中国のInP輸出規制 | 2025/2 に導入。ライセンス遅延で6インチInPウエハ価格が**+250%（5,000ドル）**、AXT・Coherent・Lumentum・台湾VPEC/LandMarkに影響。中国は世界のインジウム生産の約70% | [二次] https://www.mining.com/web/chinas-control-over-indium-phosphide-exports-threatens-ai-data-centre-rollout/ |
+| ハイパースケーラへの影響 | 禁止されれば Amazon/Microsoft 等のコスト増・GPU稼働率低下（Counterpoint）。非中国勢（Coherent/Lumentum）には代替できる能力がまだない | [二次] https://thenextweb.com/news/fcc-optical-transceiver-ban-china-us-hyperscalers |
+
+**投資上の含意 [推測]**
+- 米規制は「起草→後退」の往復で、**ヘッドラインで米国光株が±10%動くイベントリスク**（監視指標: FCC・上院法案・1260H・原産地判断）。agent5 のイベントカレンダーに入れる価値あり
+- 本当に禁止されれば最大の受益は Lumentum/Coherent/AAOI/Fabrinet（米国・非中国の生産能力）だが、能力不足で短期は「ハイパースケーラのコスト増＝設備投資の効率低下」という逆風も
+- 中国の InP 輸出規制は、**中国外のInP基板供給者（住友電工、AXTの中国外拠点、IQE）**とInPを内製するレーザー大手の交渉力を高める。日本株では住友電工(5802)の論点（agent2 へ）
+- 中国勢は米国規制リスクを抱える一方、米国外の需要（中国国内AI、他地域）と東南アジア生産で逃げ道がある。中国勢の価格攻勢は「800Gの価格下落」の主因であり、規制で米国市場から締め出されるほど米国内の価格は維持されやすい（米国勢に有利）
