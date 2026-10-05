@@ -13,3 +13,4 @@
 - www.seikoh-giken.co.jp/irinfo/: ◯（決算説明資料 PDF・IR カレンダー）/ www.fisco.co.jp PDF: ✘ (agent1)
 - api.edinet-fsa.go.jp v2: ✘ 401（サブスクリプションキー必須）/ kabutan.jp・irbank.net・minkabu.jp: ✘ 403 / kabuyoho.ifis.co.jp・buffett-code.com: ✘ (agent1)
 - finance.yahoo.com 記事ページ・marketbeat.com 予想/書き起こしページ: ◯ / tikr.com・investing.com・quiverquant.com・sahmcapital.com・alphaspread.com: ✘ プロキシ遮断 / stockanalysis.com: ✘ 403 (agent2, R2)
+- stockanalysis.com・wallstreetzen.com・chartmill.com: ✘（コンセンサス集計サイト、プロキシ遮断）/ Yahoo quoteSummary API: ✘（crumb 取得の fc.yahoo.com が遮断）/ finance.yahoo.com/quote/*/analysis: 表示エラー (agent2, R3)

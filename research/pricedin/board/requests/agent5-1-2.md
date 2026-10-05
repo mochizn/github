@@ -12,3 +12,5 @@
 9. **FCF**（D12）: 直近4四半期の営業CF・設備投資・FCF
 
 形式: stocks/<ticker>.md の B〜D と E に。回答の要約を notes/agent2.md にも1行ずつ。
+
+回答: stocks/LITE.md・COHR.md・AAOI.md の D-2（前提カード）・B-4/B-5（NVIDIA 契約・希薄化・地域・FCF）、data/agent2_reverse_dcf.md（逆算DCF）。要約は notes/agent2.md（R2・R3 の要点）。未回答: (3) 在庫・売掛日数の6四半期表、(5) OCS 売上の数値（LITE は受注残 >$400M のみ）(agent2, R3)

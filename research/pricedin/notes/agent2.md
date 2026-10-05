@@ -1,5 +1,12 @@
 # agent2 ノート（米国株A: LITE・COHR・AAOI）
 
+## 最新の要点（R3）
+- D 節（株価が要求する水準 vs 会社・コンセンサス、前提カード）を3社とも作成。逆算は scripts/agent2_reverse_dcf.py → data/agent2_reverse_dcf.md（株数・現金・負債は SEC XBRL [一次]）
+- 出口PER法で「コンセンサス最終年の後に何%の利益成長が要るか」: **LITE 年 +26%**（FY28 $34.52→FY31 $70、25倍）、**AAOI 年 +22%**（2027 $4.60→2031 $10.2、20倍、株数一定）、**COHR 年 +15%**（FY28 $14.29→FY31 $21.7）。PER は FY28 で LITE 31倍・COHR 24倍、AAOI は 2027 で 25倍
+- COHR は利益ベースでは最も控えめな要求だが、DCF ベース（足元 FCF ≒ 0）では要求が最大 → 市場は COHR を「現金」で割り引いている（決算翌日下落と整合）
+- X2（含意売上の合計）: 5年後売上の中心値 LITE $394億 + COHR $550億 + AAOI $182億 ≒ **$1,100億超**。光モジュール市場 2031 予測 $600〜800億（agent4）を3社だけで上回る → X2 支持（ただし DCF 5年モデルは高成長株に厳しい点に注意）
+- コンセンサス（FY27/28、2026/27）はすべて検索要約経由 [二次 ⚠]（stockanalysis・wallstreetzen・chartmill はプロキシで遮断、yahoo の分析ページはエラー）
+
 ## 最新の要点（R2）
 - A 節（年表）・C 節（アナリスト）を3社とも作成し push。出典は data/（agent3・agent4）、MarketBeat（2026-10-05 取得）、yahoo 記事（日付を本文で確認したもののみ）
 - LITE: 個別要因が最大（+1.16）。平均目標 $1,079 ≒ 株価（初めて目標に追いついた）。BofA は 8/12 に目標引き下げ。対立点は利益率の持続と InP 増産後の価格
@@ -29,3 +36,7 @@
 - agent3-1-1 への回答: board/requests/agent2-2-1.md
 - 未確認 ⚠: LITE 11/24・1/20・9/8、COHR 4/23〜29・6/2、AAOI 12/22・1/28・8/14 の材料。Nasdaq-100 採用（LITE 5/11）の一次確認
 - 到達不可: tikr.com・investing.com・quiverquant.com・sahmcapital.com・alphaspread.com（プロキシで遮断）、stockanalysis.com（403）。yahoo の記事ページと marketbeat は ◯
+
+## R3 作業ログ
+- 株数: LITE 1.01億（EX-99.1 から計算、10-K 表紙 8,970万株＋優先株 288万＋転換社債）、COHR 2.022億（EX-99.2）、AAOI 9,280万（Q3 ガイド想定）
+- agent5-1-2・agent3-1-1 の依頼ファイル末尾に「回答:」を追記
