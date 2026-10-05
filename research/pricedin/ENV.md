@@ -12,3 +12,4 @@
 - ssl4.eir-parts.net（フジクラ等の IR 資料一覧部品）: ✘ → フジクラの決算説明資料 PDF は取得不可。中計 PDF（fujikura.co.jp/newsrelease/...）は ◯ (agent1)
 - www.seikoh-giken.co.jp/irinfo/: ◯（決算説明資料 PDF・IR カレンダー）/ www.fisco.co.jp PDF: ✘ (agent1)
 - api.edinet-fsa.go.jp v2: ✘ 401（サブスクリプションキー必須）/ kabutan.jp・irbank.net・minkabu.jp: ✘ 403 / kabuyoho.ifis.co.jp・buffett-code.com: ✘ (agent1)
+- finance.yahoo.com 記事ページ・marketbeat.com 予想/書き起こしページ: ◯ / tikr.com・investing.com・quiverquant.com・sahmcapital.com・alphaspread.com: ✘ プロキシ遮断 / stockanalysis.com: ✘ 403 (agent2, R2)
