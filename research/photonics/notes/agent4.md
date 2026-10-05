@@ -1,14 +1,13 @@
 # agent4 ノート（検証ゲート＋弱気担当）
 
-## 最新の要点（R7, 2026-10-05）
-- **REPORT 整合監査（§17）**: 確率加重値・価格表・今日の投入・比率の合計は全行を再計算して一致 ✔。不一致は14件（A3・B7・C7）→ agent5（board/doubts/agent4-7-1.md）
-  - **A1**: 「✔ があるのは4銘柄だけ」という前提は古い。COHR・FN・GLW・AVGO・住友電工・santec にも ✔ があり、確信度と比率が上がる可能性
-  - **A2**: エントリー条件に旧ルール「最低 1/4 保有（V 4 以上）」が残っている（保険枠 1/6 に差し替え済みのはず）
-  - **A3**: 積極パターンの弱気時の損失が −37.7% と −40% の2通り
-  - **B**: §4.2 に R5 の確率の理由と R6 の差し替えが並存。§1.2 の「顧客資金の LTA」に反例が無い。フジクラ・LITE・COHR の2026年の下落率が節ごとに違う（基準の違い）。判断が逆転する確率が §4.2 と §6.1 で違う
-- **⚠ の棚卸し（§18）**: ✘ はすべて訂正済み。R7 で AAOI・FN・古河電工の株価と USD/JPY 157.8 を ✔ に更新。残る ⚠ は主に単一ソースの配当・セグメント・負債。結論への影響は小さい
-- agent4 自身の修正: §16 の判断が逆転する確率を agent5 の再計算に合わせた。GLW の弱気の範囲を −36〜−62% に
-- 新規出典 3 / 新規主張 6（照合結果）。次ラウンド: agent5 の修正の確認。最終ラウンドは訂正のみ
+## 最新の要点（R8, 2026-10-05）
+- **CIEN・MRVL の照合（§19）**: CIEN は ✔3・⚠1・✘2、MRVL は ✔2・⚠1・✘1
+  - **✘ CIEN の株価 $379.14 は終値ではない** → 終値 **$391.34**（+3.22%）。時価総額は $53.8B → **$55.5B**（agent3 が「希薄化後ベース」と推測した $55.5B は、正しい終値で計算した値だった）。EV/売上 約8.0倍、FY27 PER 38〜40倍、高値比 −38.6%
+  - **✘ MRVL の純負債「約$4B」（記憶ベース）** → 10-Q で **約$1.07B**（借入 $50.0億 − 現金 $39.3億）
+  - agent3 の未照合項目: LITE・COHR・FN の FY28 コンセンサス EPS は ✔（COHR は $13.96〜14.29 の幅）
+- **R9 で確認する論点を §20 に**（R9-1〜R9-7）。最優先は A1（✔ 増加後の確信度の再計算。MRVL などが基準 3.0 を超えると組み入れの判断が変わる）と、新しく追加されたアクションシートの数値監査
+- 弱気シナリオに「西側サプライヤー・プレミアムの縮小」を追加（§21、agent1 の提案）
+- 新規出典 6 / 新規主張 14（すべて[二次]）。次ラウンド: §20 の確認。最終ラウンドは訂正のみ
 
 ---
 
@@ -622,6 +621,41 @@ agent5 は agent1 の U5（顧客資金による能力確保）と U2（予測�
 | 共通 | 90日ボラ・ベータ、相関の実測 | ⚠未取得で確定（agent2/3） |
 | 共通 | USD/JPY 157.8（2026-10-02） | R7 で ✔（157.83 / 157.86 の2ソース） |
 
+## §19 検証表 V（R8, 2026-10-05）: CIEN / MRVL ＋ agent3 の未照合項目
+| # | 銘柄・主張 | 判定 | 照合結果・根拠 |
+|---|---|---|---|
+| N1 | CIEN FQ3'26 売上 $1.67B（+37%）、調整後 EPS $2.11（+215%）、調整後 GM 46.4%・OPM 22.5%、受注残 $8.5B（前期比 +$0.8B） | ✔ | 8-K EX-99.1（sec.gov）の要約、Yahoo、investing.com で一致 |
+| N2 | CIEN FQ4 ガイダンス $1.75B ± $50M、FY26 売上ガイド $6.42B（+35%） | ✔ | 同上 |
+| N3 | **CIEN 株価 $379.14（2026-10-02、当日 +7.8%）** | **✘** | 終値は **$391.34（+3.22%、始値 $385.00・高値 $395.96・安値 $377.03）**（別の要約2件で一致）。$379.14 は fxleaders の記事中の値（場中か別時点）とみられる |
+| N4 | CIEN 時価総額 $53.8B（$55.5B 系は希薄化後株数ベースと推測） | **✘（推測の方）** | 141,897,511株 × $391.34 ＝ **$55.5B** で、要約の表示 $55.50B と一致する。$55.5B は希薄化後株数ではなく、**正しい終値で計算した値**。EV は 約$55.9B、FQ4 ガイド年率（$7.0B）で **EV/売上 約8.0倍**（カードは 7.7倍） |
+| N5 | CIEN FY27 コンセンサス EPS $10.17 → PER 約37倍 | ⚠ | 別の要約では $9.67〜9.69。PER は $391.34 で **38〜40倍**（$10.17 なら 38.5倍、$9.67 なら 40.5倍） |
+| N6 | CIEN 52週高値 $637.51、高値比 −40.5% | 高値 ✔ / 比率は修正 | 高値は一致。$391.34 なら高値比 **−38.6%** |
+| N7 | MRVL FQ2'27 売上 $2.739B（+37%）、DC $2.17B（+46%）、FQ3 ガイド $3.15B、FY28 売上見通し $18B | ✔ | businesswire・Marvell IR の PR、tradingkey で一致。追加: non-GAAP EPS $0.94 |
+| N8 | MRVL 株価 $273.04 | ⚠ | 要約では終値 **$272.29**。差は0.3%で結論に影響しない |
+| N9 | MRVL FY28 コンセンサス EPS $6.75 → PER 約40倍 | ✔ | 2ソースで一致。$272.29 ÷ 6.75 ＝ 40.3倍 |
+| N10 | MRVL 純負債 約$4B [推測：記憶] | **✘** | 10-Q（2026-08-01）の要約: 借入 $4,999.9M − 現金 $3,932.8M ＝ **純負債 約$1.07B** |
+| N11 | LITE FY28 コンセンサス EPS $34.52 | ✔ | stockanalysis 系の要約と agent3 で一致 |
+| N12 | COHR FY28 コンセンサス EPS $14.07〜14.29 | ✔（幅あり） | 別の要約では $13.96。幅 $13.96〜14.29 で、§4.3 の中立（$14.2 × 22倍）への影響は ±1% |
+| N13 | FN FY28 EPS $21.52（$18.66〜23.59） | ✔ | 2ソースで一致 |
+| — | FN 純現金 $875.1M、LITE の FCF・転換社債残高・優先株の条件 | ⚠ | R8 では未照合 |
+
+**REPORT への影響（agent5 へ）**: §2.1 の CIEN 時価総額（約$53.8B → **約$55.5B**）、§2.2 の CIEN 行（EV/年率売上 7.7倍 → **約8.0倍**、FY27 PER 37倍 → **38〜40倍**）。MRVL の行（PER 40倍）は変更不要
+
+## §20 次ラウンド（R9）で確認する論点: 整合監査の反映
+agent5 が R8 で board/doubts/agent4-7-1.md（14件）を反映した後に、次の順で確認する。
+- **R9-1（A1）**: ✔ の付いた銘柄（COHR・FN・GLW・AVGO・住友電工・santec、R8 で CIEN・MRVL の一部）の補正が外れ、確信度が再計算されたか。目標比率と今日の投入がどう変わったか。**確信度が上がって 3.0 を超える銘柄（MRVL 2.80 など）が出た場合、組み入れの判断が変わる**
+- **R9-2（A2）**: §5.2 のエントリー条件から「最低 1/4（V 4 以上）」が消え、保険枠（1/6）に統一されたか。§5.5 の R5 表の該当行に「R6 で置き換え」の注記があるか
+- **R9-3（A3）**: 弱気時の損失（積極）が1つの値に統一されたか。§0 やアクションシートに転記されていればそこも
+- **R9-4（B1〜B7）**: 確率の理由が1つに、下落率は基準付きで統一、§1.2 に反例、判断が逆転する確率は §4.2 の値、精工技研の含意 CAGR、GLW の範囲
+- **R9-5（C1〜C7）**: 文の修正、5,561円、時価総額の定義、AAOI の純利益率の表記、✔ 印、§2.3 の未照合の数値への ⚠、§7 付録
+- **R9-6（R8 の新規）**: CIEN の株価・時価総額・倍率（§19 N3〜N6）、MRVL の純負債（N10）
+- **R9-7（新しい監査）**: アクションシート（R7 で agent5 が追加）の数値が §4.3・§5.2 と一致しているか（価格表の段階、今日の投入、イベントの日付）
+
+## §21 弱気シナリオへの追加（agent1-7-1 の提案を採用）
+- **「西側サプライヤー・プレミアム」の縮小**: 中国の組立大手は、同程度の利益成長でも予想PER が約16〜26倍で、LITE（FY28 約31倍）・COHR（FY27 約35倍）より4〜5割低い（agent1 §R7-1、[二次]・未照合）。差の一部は米国の規制リスク（中国勢の締め出し期待）の裏返し。FCC が 2026-09 に光モジュールを個別指定しなかったこと（✔）は、このプレミアムの下押し要因
+- 監視点: LITE の FY28 PER が中国勢の 2027年 PER の2倍を超えて拡大していないか。米国の対中規制の緩和（トランシーバ特化の規制案の後退）
+- REPORT §6.1 に項目9として追加する場合の1文: 「米国勢の高い倍率の一部は、中国勢の締め出しへの期待（西側サプライヤー・プレミアム）。FCC は 2026-09 に光モジュールを個別指定しておらず、規制が緩めばこのプレミアムは縮む」
+
 ## 出典（R1, 取得 2026-10-05, すべて WebSearch 要約経由）
 1. JDSU FY2001 8-K: https://www.sec.gov/Archives/edgar/data/0000912093/000091209301500022/form8kex99b_072601.htm
 2. Washington Post 2001-07-27: https://www.washingtonpost.com/archive/business/2001/07/27/write-downs-give-jds-506-billion-loss-record-for-a-us-firm/6b2cbb8c-d731-4984-b8b0-5ad1d886eea9/
@@ -699,3 +733,11 @@ agent5 は agent1 の U5（顧客資金による能力確保）と U2（予測�
 - AAOI・FN の株価（2026-10-02 終値 $115.59 / $463.69）: https://stockanalysis.com/stocks/aaoi/ ／ https://stockanalysis.com/stocks/fn/
 - 古河電工の株価（4,429円、前日比 +7.68%）: https://www.nikkei.com/nkd/company/history/dprice/?scode=5801 ／ https://finance.yahoo.co.jp/quote/5801.T
 - USD/JPY（2026-10-02: 157.828 / 終値 157.86）: https://tradingeconomics.com/japan/currency ／ https://www.investing.com/currencies/usd-jpy-historical-data
+
+## 出典（R8, 取得 2026-10-05, すべて WebSearch 要約経由）
+- CIEN FQ3'26 8-K: https://www.sec.gov/Archives/edgar/data/0000936395/000162828026060245/ex9912026q3earningspressre.htm ／ https://finance.yahoo.com/markets/stocks/articles/ciena-reports-fiscal-third-quarter-110000064.html
+- CIEN 株価（2026-10-02 終値 $391.34）: https://finance.yahoo.com/quote/CIEN/history/ ／ https://www.cnn.com/markets/stocks/CIEN
+- CIEN コンセンサス・52週: https://stockanalysis.com/stocks/cien/forecast/ ／ https://www.tipranks.com/stocks/cien
+- MRVL FQ2'27: https://www.businesswire.com/news/home/20260827816134/en/Marvell-Technology-Inc.-Reports-Second-Quarter-of-Fiscal-Year-2027-Financial-Results ／ https://www.tradingkey.com/news/transcripts/262137259-tradingkey
+- MRVL 10-Q（2026-08-01）: https://www.sec.gov/Archives/edgar/data/0001835632/000183563226000025/mrvl-20260801.htm ／ https://www.marketbeat.com/instant-alerts/fy2028-eps-estimates-for-mrvl-increased-by-erste-group-bank-2026-05-08/
+- FY28 コンセンサス: https://stockanalysis.com/stocks/lite/forecast/ ／ https://simplywall.st/stocks/us/tech/nyse-cohr/coherent/future ／ https://stockanalysis.com/stocks/fn/forecast/
