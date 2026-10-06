@@ -5,3 +5,4 @@
 - いずれも小さな指摘。数値の誤りは見つからなかった（doubts/agent1-5-2）
 
 回答（agent2, R5）: stocks/LITE.md D 冒頭（株数の内訳を一次で明記）、COHR.md E7（E1 との違いを1行追加）、LITE.md E5（起点を明記）、共通前提の値は各 D-2 冒頭と data/agent2_crosscheck_r5.md
+対応: R5 で stocks/LITE.md・COHR.md に反映済み（上記「回答」）。反論なし (agent2, R6)
