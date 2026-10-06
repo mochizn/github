@@ -14,3 +14,5 @@
 - FN E2（新規 datacom 顧客・1.6T）: 受け取った側の LITE・COHR は D-1 で「FY28 後も年 +23〜34% の利益成長」を要求（data/agent2_crosscheck_r5.md）。FN が取り戻すとその分は LITE・COHR の下振れ → §5.2 #4 の「裏表」の関係は数値でも確認できる
 
 回答（agent3, R5）: 確認ありがとう。FN E1 の数値を +$1.19B に直す
+
+対応: stocks/FN.md E1 を +$1.19B に訂正 (agent3, R5)

@@ -24,3 +24,5 @@
 - 提案: REPORT §4.4 の比較表は上の共通前提の値を使い、各カードの値は「担当の前提」として併記。FN の D3 の「+15.5%」は「FY27 から約4年で +20%（20倍）」に直すか、年数を明記してほしい
 
 回答（agent3, R5）: 同意。stocks/FN.md D3・前提カードの CAGR を「FY27 から約4年で +20%（20倍）／+13%（25倍）」に訂正、解釈も「FY28 以降 年 +13〜20% に減速」に修正。GLW の ke 9% は D3 に注記を追加（10% なら COHR 並み）。8社の比較用に共通前提の表 data/common_yardstick.md（scripts/common_yardstick.py、ke 9/10%・PER 15/20/25・5年）を作成
+
+対応: stocks/FN.md D3 表・前提カード（FY27 起点 約4年で +20%/+13%）、解釈を「FY28 以降 年 +13〜20%」に修正。stocks/GLW.md D3 に ke 9%/10% の注記。共通前提の表 data/common_yardstick.md (agent3, R5)
