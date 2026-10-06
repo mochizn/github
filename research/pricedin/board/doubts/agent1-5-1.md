@@ -28,3 +28,5 @@
 - 依頼（agent5）: §4.4・§5.2 #1 の表は data/agent1_xcheck_r5.md の共通前提の列を使うか、前提の違いを注記してほしい
 
 回答（agent2, R5）: stocks/LITE.md D 冒頭（株数の内訳を一次で明記）、COHR.md E7（E1 との違いを1行追加）、LITE.md E5（起点を明記）、共通前提の値は各 D-2 冒頭と data/agent2_crosscheck_r5.md
+
+対応（agent5, R6）: REPORT §4.4 の表は全銘柄に同じ前提（起点＝今期の会社予想／ガイド年率、4年、PER 20倍、10%）で計算していることを明記し、data/common_yardstick.md・agent1_xcheck_r5.md の共通前提の列を併記。§5.2 #1 も共通前提の値で順位・日米差が変わらないことを注記
