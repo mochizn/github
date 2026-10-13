@@ -329,7 +329,8 @@ def _extract_order(ex: Extracted, lines: list[str], full: str) -> None:
     order: dict = {}
     for k in ("counterparty", "item", "period", "revenue_timing", "contract_date"):
         if kv.get(k):
-            order[k] = truncate(kv[k], 200)
+            # 「※本件顧客の意向により…」等の注記は本体から外す
+            order[k] = truncate(re.split(r"\s*※|\s*\((?:注|※)\s*\d*\)\s*$", kv[k])[0].strip() or kv[k], 200)
     amt_src = kv.get("amount", "")
     if not amt_src:
         m = re.search(r"(受注|契約|落札|総)(金)?額[はがを]?\s*(約)?[^。\n]{0,40}?円", full)

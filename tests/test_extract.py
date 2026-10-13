@@ -90,6 +90,7 @@ def test_order_foreign_currency_uses_yen_note():
     assert ex.order["amount_foreign"]["currency"] == "USD"
     assert ex.amount_yen == pytest.approx(27_984e6)  # 注記の年間円換算額
     assert "(注)" not in ex.order["period"]
+    assert ex.order["counterparty"].endswith("AIインフラ企業")
 
 
 def test_forecast_down():

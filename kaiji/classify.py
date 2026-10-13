@@ -170,12 +170,21 @@ def classify(title: str, name: str = "") -> Classification:
             continue
         tags.append(cat.key)
 
+    # 「決算短信の開示が期末後50日を超えることに関するお知らせ」等は短信そのものではない
+    if "earnings" in tags and re.search(r"決算短信.*(開示|提出|発表).*(お知らせ|について)|開示予定日", t):
+        tags.remove("earnings")
     # 決算短信はタイトルに「配当」等を含まないが、短信優先で処理する
     if "earnings" in tags:
         tags = ["earnings"] + [x for x in tags if x not in ("earnings", "presentation")]
     # 投資法人・ETFは銘柄名からも判定する
     if n.startswith(("R-", "I-")) and "fund" not in tags and re.search(r"投資法人|リート|REIT", t + n):
         tags.append("fund")
+    # ETF・REIT の決算短信は「2026年8月期(2026年2月5日~2026年8月4日)決算短信」のように計算期間が入る
+    _period = r"[\(（]\s*\d{4}年\d{1,2}月\d{1,2}日\s*[~～〜-]\s*\d{4}年\d{1,2}月\d{1,2}日"
+    if "earnings" in tags and (re.search(_period + r"\s*[\)）]\s*決算短信", t) or re.search(r"決算短信\s*" + _period, t)):
+        tags = ["fund"] + tags
+    if re.search(r"決算短信.*(REIT|リート)|投資法人", t) and "fund" not in tags:
+        tags = ["fund"] + tags
     if "fund" in tags:
         # ETF/REIT の開示は事業会社向けタグを外す
         tags = ["fund"] + [x for x in tags if x in ("earnings", "forecast")]

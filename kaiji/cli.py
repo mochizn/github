@@ -263,6 +263,26 @@ def cmd_reprocess(store: Store, a: argparse.Namespace) -> None:
         cmd_process(store, a)
 
 
+def cmd_reclassify(store: Store, a: argparse.Namespace) -> None:
+    """分類ルール変更後に既存データへ再適用する。新たに詳細抽出対象になったものは未処理に戻す。"""
+    from .classify import classify
+
+    changed = queued = 0
+    for r in list(store.iter_all()):
+        c = classify(r["title"], r["name"])
+        tags = ",".join(c.tags)
+        if tags == r["tags"] and c.importance == r["importance"]:
+            continue
+        fields = {"category": c.primary, "tags": tags, "importance": c.importance, "is_correction": int(c.is_correction)}
+        if c.deep and r["status"] == "meta":
+            fields["status"] = "new"
+            queued += 1
+        store.update(r["id"], **fields)
+        changed += 1
+    store.commit()
+    print(f"{changed} rows reclassified, {queued} queued for extraction")
+
+
 def cmd_notify(store: Store, a: argparse.Namespace) -> None:
     cats = set(a.category.split(",")) if a.category else None
     res = pipeline.notify_new(store, since=a.since or pipeline.today_jst().isoformat(), min_importance=a.min_importance,
@@ -319,7 +339,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     sp = sub.add_parser("reprocess", help="抽出をやり直す")
     sp.add_argument("--since")
-    sp.add_argument("--category")
+    sp.add_argument("--category", "-c")
     sp.add_argument("--limit", type=int, default=5000)
     sp.add_argument("--interval", type=float, default=1.0)
     sp.add_argument("--no-process", action="store_true")
@@ -380,6 +400,9 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("codes", nargs="*")
     sp.add_argument("--note")
     sp.set_defaults(func=cmd_watch)
+
+    sp = sub.add_parser("reclassify", help="分類ルールを既存データに再適用")
+    sp.set_defaults(func=cmd_reclassify)
 
     sp = sub.add_parser("notify", help="未通知の重要開示を通知")
     sp.add_argument("--since")
