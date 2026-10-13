@@ -106,3 +106,26 @@ def test_earnings_qualitative_and_order_mentions():
     assert "…" not in ex.qualitative[:100]  # 目次は除去済み
     assert any("受注高" in s for s in ex.order_mentions)
     assert ex.summary
+
+
+def test_is_readable():
+    from kaiji.pdftext import is_readable
+
+    assert not is_readable("")
+    assert not is_readable("(cid:12)(cid:345)" * 50)
+    assert is_readable("当社は、大口受注をいたしましたのでお知らせいたします。" * 3)
+
+
+@pytest.mark.parametrize(
+    "title,text,expected",
+    [
+        ("業績予想の修正(上方修正)に関するお知らせ", "売上高は前回予想を下回る見込み", "up"),
+        ("業績予想の修正に関するお知らせ", "売上高は前回予想を上回りましたが、営業利益は前回予想を下回る見込みです。", "down"),
+        ("業績予想の修正に関するお知らせ", "利益面は前回発表予想を上回る見込みとなりました。", "up"),
+        ("業績予想の修正に関するお知らせ", "未定に変更します", ""),
+    ],
+)
+def test_forecast_direction(title, text, expected):
+    from kaiji.extract import forecast_direction
+
+    assert forecast_direction(title, text) == expected

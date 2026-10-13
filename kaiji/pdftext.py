@@ -4,8 +4,17 @@ from __future__ import annotations
 
 import io
 import logging
+import re
 
 log = logging.getLogger(__name__)
+
+
+def is_readable(text: str) -> bool:
+    """フォントにUnicode対応表が無いPDFは (cid:123) の羅列になる。画像のみのPDFは空になる。"""
+    if len(text.strip()) < 20:
+        return False
+    cids = len(re.findall(r"\(cid:\d+\)", text))
+    return cids * 8 < len(text) * 0.3
 
 
 def pdf_to_text(data: bytes, max_pages: int = 30) -> str:

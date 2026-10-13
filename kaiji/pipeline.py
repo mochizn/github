@@ -15,7 +15,7 @@ from . import llm, notify
 from .classify import classify
 from .db import ARCHIVE_FIELDS, Store, now_iso
 from .extract import extract
-from .pdftext import pdf_to_text
+from .pdftext import is_readable, pdf_to_text
 from .tdnet import TdnetClient
 from .textutil import truncate
 
@@ -72,6 +72,13 @@ def process(store: Store, client: TdnetClient, limit: int = 200) -> dict:
                 raise RuntimeError("PDF not found")
             # 決算短信は定性情報が冒頭数ページにあるため全ページは読まない
             text = pdf_to_text(data, max_pages=8 if "earnings" in row["tag_list"] else 20)
+            if not is_readable(text):
+                # 画像PDF・文字コード表の無いPDF: タイトル等のメタ情報のみ保持
+                store.update(row["id"], status="done", processed_at=now_iso(), error="no_text",
+                             summary="(本文テキストを抽出できないPDFです。原文PDFを参照してください)")
+                res["no_text"] = res.get("no_text", 0) + 1
+                store.commit()
+                continue
             ex = extract(text, row["title"], row["tag_list"])
             store.update(
                 row["id"],

@@ -381,21 +381,33 @@ def _extract_earnings(ex: Extracted, lines: list[str]) -> None:
     ][:6]
 
 
-def _extract_forecast(ex: Extracted, lines: list[str], full: str) -> None:
+_UP = r"上回る|上回り|上回った|上方修正|増加する見込み|上振れ|増益"
+_DOWN = r"下回る|下回り|下回った|下方修正|減少する見込み|下振れ|減益|損失(の|を)?計上"
+
+
+def forecast_direction(title: str, text: str) -> str:
+    """業績修正の方向。タイトル明記 > 利益に関する記述 > 全体 の順で判定。"""
+    t = nfkc(title)
+    if "上方修正" in t and "下方修正" not in t:
+        return "up"
+    if "下方修正" in t and "上方修正" not in t:
+        return "down"
+    # 「売上高は上回ったが、利益は下回った」を分けて評価するため節単位に分割
+    sents = [c for x in split_sentences(nfkc(text)) for c in re.split(r"が、|ものの|一方[、で]?|しかしながら", x) if c]
+    profit = [x for x in sents if re.search(r"利益|損益|損失", x)]
+    for group in (profit, sents):
+        up = sum(len(re.findall(_UP, x)) for x in group)
+        down = sum(len(re.findall(_DOWN, x)) for x in group)
+        if up or down:
+            return "up" if up > down * 1.5 else "down" if down > up * 1.5 else "mixed"
+    return ""
+
+
+def _extract_forecast(ex: Extracted, lines: list[str], full: str, title: str) -> None:
     reason = find_sections(lines, r"修正の理由|差異の理由|理由|修正の内容及び理由|背景", max_chars=2500)
     if reason:
         ex.reason = reason[0]
-    t = nfkc(full)
-    up = len(re.findall(r"上回る|上回り|上方修正|増加する見込み|上振れ", t))
-    down = len(re.findall(r"下回る|下回り|下方修正|減少する見込み|下振れ", t))
-    # 増減率行の符号でも判断する(△はマイナス)
-    m = re.search(r"増減(額|率)[^\n]*", t)
-    if m:
-        row = m.group(0)
-        down += row.count("△") + row.count("▲")
-        up += len(re.findall(r"(?<![△▲\-0-9.,])[1-9][0-9,]*(?:\.[0-9]+)?", row)) // 2
-    if up or down:
-        ex.direction = "up" if up > down * 1.5 else "down" if down > up * 1.5 else "mixed"
+    ex.direction = forecast_direction(title, ex.reason or full)
 
 
 def extract(raw_text: str, title: str, tags: list[str] | tuple[str, ...] = ()) -> Extracted:
@@ -416,7 +428,7 @@ def extract(raw_text: str, title: str, tags: list[str] | tuple[str, ...] = ()) -
     if "earnings" in tagset:
         _extract_earnings(ex, body_lines)
     if "forecast" in tagset:
-        _extract_forecast(ex, body_lines, ex.body)
+        _extract_forecast(ex, body_lines, ex.body, title)
     if tagset & {"order", "subsidy"} or (ex.kv.get("amount") and tagset & {"alliance", "new_biz"}):
         _extract_order(ex, body_lines, ex.body)
 
