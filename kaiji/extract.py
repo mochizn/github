@@ -376,7 +376,8 @@ def _extract_earnings(ex: Extracted, lines: list[str]) -> None:
     text = ex.qualitative or "\n".join(lines)
     sents = split_sentences(text)
     head = next((s for s in sents if ("以上の結果" in s or "その結果" in s or "売上高" in s) and re.search(r"[0-9]", s)
-                 and re.search(r"(売上|営業収益|収益|利益)", s) and re.search(r"円", s)), "")
+                 and re.search(r"(売上|営業収益|収益|利益)", s) and re.search(r"円", s)
+                 and re.search(r"[%％]|前年|前期|増収|減収|増益|減益", s)), "")
     if not head:
         head = next((s for s in split_sentences(text) if re.search(r"(売上高|営業収益|売上収益)", s) and re.search(r"円", s) and re.search(r"[%％]", s)), "")
     ex.summary = truncate(head, 300)
@@ -417,7 +418,7 @@ def extract_order_metrics(text: str, limit: int = 6) -> list[dict]:
     out: list[dict] = []
     for sent in split_sentences(nfkc(text)):
         for m in _METRIC_RE.finditer(sent):
-            tail = sent[m.end(): m.end() + 45]
+            tail = sent[m.end(): m.end() + 70]
             # 次の指標名・「売上高」等が出てくる前の金額だけを対象にする
             stop = re.search(r"受注|売上|利益|損失|件数", tail)
             window = tail[: stop.start()] if stop else tail
@@ -425,6 +426,11 @@ def extract_order_metrics(text: str, limit: int = 6) -> list[dict]:
             if not amts:
                 continue
             a = amts[0]
+            # 「前期末に比べ135億円増加し、571億円となりました」は増減額ではなく残高を採る
+            if len(amts) > 1:
+                between = window[window.find(amts[0].raw) + len(amts[0].raw): window.find(amts[1].raw)]
+                if re.search(r"増加|減少|増え|減り|増し|減じ", between):
+                    a = amts[1]
             after = sent[m.end(): m.end() + 80]
             y = _YOY_RE.search(after[: after.find("。") if "。" in after else None])
             yoy = None

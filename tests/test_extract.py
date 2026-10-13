@@ -155,3 +155,5 @@ def test_order_metrics():
 def test_earnings_metrics_fixture():
     ex = extract(load("earnings_takeuchi.txt"), "決算短信", ["earnings"])
     assert any(x["metric"] == "受注高" and x["value_yen"] == pytest.approx(1459.83e8) and x["yoy_pct"] == pytest.approx(48.1) for x in ex.metrics)
+    assert any(x["metric"] == "受注残高" and x["value_yen"] == pytest.approx(571.67e8) for x in ex.metrics)
+    assert "%" in ex.summary
