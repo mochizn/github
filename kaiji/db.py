@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS disclosures (
     order_json TEXT,
     order_mentions_json TEXT,
     signals_json TEXT,
+    metrics_json TEXT,
     direction TEXT NOT NULL DEFAULT '',
     amount_yen REAL,
     llm_json TEXT,
@@ -84,14 +85,14 @@ CREATE TABLE IF NOT EXISTS meta (
 );
 """
 
-JSON_FIELDS = ("kv_json", "order_json", "order_mentions_json", "signals_json", "llm_json")
+JSON_FIELDS = ("kv_json", "order_json", "order_mentions_json", "signals_json", "metrics_json", "llm_json")
 TEXT_FIELDS = ("summary", "lead", "outlook", "reason", "qualitative", "body")
 # アーカイブ(JSONL)に保存する列
 ARCHIVE_FIELDS = (
     "id", "date", "time", "code", "name", "title", "category", "tags", "importance", "is_correction",
     "pdf_url", "xbrl_url", "exchange", "history", "status", "processed_at",
     "summary", "lead", "outlook", "reason", "qualitative", "body", "kv_json", "order_json",
-    "order_mentions_json", "signals_json", "direction", "amount_yen", "llm_json", "llm_model", "notified_at",
+    "order_mentions_json", "signals_json", "metrics_json", "direction", "amount_yen", "llm_json", "llm_model", "notified_at",
 )
 
 
@@ -108,6 +109,15 @@ class Store:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.executescript(SCHEMA)
+        self._migrate()
+
+    def _migrate(self) -> None:
+        """古いDBに後から追加した列を足す。"""
+        cols = {r[1] for r in self.conn.execute("PRAGMA table_info(disclosures)")}
+        for col in ("metrics_json",):
+            if col not in cols:
+                self.conn.execute(f"ALTER TABLE disclosures ADD COLUMN {col} TEXT")
+        self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
@@ -194,6 +204,29 @@ class Store:
     def iter_all(self, where: str = "1=1", params: tuple = ()) -> Iterator[dict]:
         for r in self.conn.execute(f"SELECT * FROM disclosures WHERE {where} ORDER BY date, time, id", params):
             yield row_to_dict(r)
+
+    def order_metrics(self, metric: str | None = None, min_yoy: float | None = None, since: str | None = None,
+                      code: str | None = None, limit: int = 100) -> list[tuple[dict, dict]]:
+        """決算短信等から抽出した受注高・受注残高を (開示, 指標) で返す。銘柄×開示ごとに先頭の指標のみ。"""
+        where, params = ["metrics_json IS NOT NULL"], []
+        if since:
+            where.append("date >= ?")
+            params.append(since)
+        if code:
+            where.append("code = ?")
+            params.append(code.upper())
+        out = []
+        for r in self.iter_all(" AND ".join(where), tuple(params)):
+            seen = set()
+            for m in r.get("metrics") or []:
+                if m["metric"] in seen or (metric and m["metric"] != metric):
+                    continue
+                seen.add(m["metric"])
+                if min_yoy is not None and (m.get("yoy_pct") is None or m["yoy_pct"] < min_yoy):
+                    continue
+                out.append((r, m))
+        out.sort(key=lambda x: (x[1].get("yoy_pct") if x[1].get("yoy_pct") is not None else -1e9), reverse=True)
+        return out[:limit]
 
     def stats(self) -> dict:
         c = self.conn

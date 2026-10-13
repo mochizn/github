@@ -61,7 +61,7 @@ def page(title: str, body: str) -> str:
     return f"""<!doctype html><html lang="ja"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(title)} - kaiji</title><style>{CSS}</style></head>
 <body><header><b><a href="/">kaiji 適時開示DB</a></b><nav>
-<a href="/">検索</a><a href="/orders">受注</a><a href="/?category=forecast">業績修正</a><a href="/?category=earnings">決算短信</a>
+<a href="/">検索</a><a href="/orders">受注</a><a href="/?category=forecast">業績修正</a><a href="/?category=earnings">決算短信</a><a href="/metrics">受注高</a>
 <a href="/?watch=1">ウォッチ</a><a href="/stats">統計</a></nav></header><main>{body}</main></body></html>"""
 
 
@@ -103,6 +103,18 @@ def row_card(r: dict, terms: list[str]) -> str:
 <a href="/c/{quote(r['code'])}">{esc(r['code'])} {esc(r['name'])}</a> · {badges}{extra}</div>
 <div class="ttl"><a href="/d/{quote(r['id'])}">{highlight(r['title'], terms)}</a></div>
 <div>{highlight(truncate(summary, 260), terms)}</div>{snip_html}</div>"""
+
+
+def metrics_table(items: list[tuple[dict, dict]]) -> str:
+    trs = []
+    for r, m in items:
+        yoy = "" if m.get("yoy_pct") is None else f"{m['yoy_pct']:+.1f}%"
+        cls = "pos" if (m.get("yoy_pct") or 0) > 0 else "neg" if (m.get("yoy_pct") or 0) < 0 else ""
+        trs.append(f"<tr><td><a href='/d/{quote(r['id'])}'>{esc(r['date'])}</a></td><td>{esc(m['metric'])}</td>"
+                   f"<td class='r amt'>{esc(format_yen(m['value_yen']))}</td><td class='r {cls}'>{yoy}</td>"
+                   f"<td class='meta'>{esc(m.get('text', ''))}</td></tr>")
+    return ("<div class='tbl'><table><tr><th>開示日</th><th>指標</th><th>金額</th><th>前年比</th><th>原文</th></tr>"
+            + "".join(trs) + "</table></div>")
 
 
 def query_from_params(p: dict, **over) -> SearchQuery:
@@ -199,6 +211,8 @@ class App:
         for key, lab in (("reason", "理由"), ("outlook", "見通し・業績への影響"), ("qualitative", "経営成績の概況(定性情報)")):
             if r.get(key):
                 parts.append(f"<h2>{lab}</h2><div class='card pre'>{esc(r[key])}</div>")
+        if r.get("metrics"):
+            parts.append("<h2>受注高・受注残高</h2>" + metrics_table([(r, m) for m in r["metrics"]]))
         if r.get("order_mentions"):
             parts.append("<h2>受注への言及</h2><ul>" + "".join(f"<li>{esc(s)}</li>" for s in r["order_mentions"]) + "</ul>")
         if r.get("signals"):
@@ -223,7 +237,32 @@ class App:
                f"<input type='hidden' name='action' value='{'rm' if watched else 'add'}'>"
                f"<button>{'ウォッチ解除' if watched else 'ウォッチに追加'}</button></form>")
         cards = "".join(row_card(r, []) for r in rows) or "<p>該当なし</p>"
-        return page(name, f"<h2>{esc(code)} {esc(name)} の開示タイムライン</h2>{btn}<p></p>{cards}")
+        trend = [(r, m) for r in rows for m in (r.get("metrics") or [])]
+        trend_html = f"<h2>受注高・受注残高の推移</h2>{metrics_table(trend)}" if trend else ""
+        return page(name, f"<h2>{esc(code)} {esc(name)} の開示タイムライン</h2>{btn}{trend_html}<h2>開示一覧</h2>{cards}")
+
+    def h_metrics(self, p: dict) -> str:
+        try:
+            min_yoy = float(p["min_yoy"]) if p.get("min_yoy") else None
+        except ValueError:
+            min_yoy = None
+        with self.lock:
+            items = self.store.order_metrics(metric=p.get("metric") or None, min_yoy=min_yoy, since=p.get("since") or None, limit=300)
+        rows = []
+        for r, m in items:
+            yoy = "" if m.get("yoy_pct") is None else f"{m['yoy_pct']:+.1f}%"
+            cls = "pos" if (m.get("yoy_pct") or 0) > 0 else "neg" if (m.get("yoy_pct") or 0) < 0 else ""
+            rows.append(f"<tr><td>{esc(r['date'])}</td><td><a href='/c/{quote(r['code'])}'>{esc(r['code'])} {esc(r['name'])}</a></td>"
+                        f"<td>{esc(m['metric'])}</td><td class='r amt'>{esc(format_yen(m['value_yen']))}</td>"
+                        f"<td class='r {cls}'>{yoy}</td><td class='meta'><a href='/d/{quote(r['id'])}'>{esc(truncate(m.get('text', ''), 90))}</a></td></tr>")
+        sel = p.get("metric", "")
+        form = (f"<form class='q' action='/metrics'><select name='metric'><option value=''>受注高・受注残高</option>"
+                f"<option{' selected' if sel == '受注高' else ''}>受注高</option><option{' selected' if sel == '受注残高' else ''}>受注残高</option></select>"
+                f"<input name='min_yoy' value='{esc(p.get('min_yoy', ''))}' placeholder='前年比 下限% 例:20' size='14'>"
+                f"<input name='since' type='date' value='{esc(p.get('since', ''))}'><button>絞り込み</button></form>")
+        table = ("<div class='tbl'><table><tr><th>開示日</th><th>銘柄</th><th>指標</th><th>金額</th><th>前年比</th><th>原文</th></tr>"
+                 + "".join(rows) + "</table></div>") if rows else "<p>該当なし</p>"
+        return page("受注高トレンド", "<h2>決算短信の受注高・受注残高(前年比順)</h2>" + form + table)
 
     def h_stats(self) -> str:
         with self.lock:
@@ -266,6 +305,8 @@ def make_handler(app: App):
                     self._send(app.h_detail(path[3:]))
                 elif path.startswith("/c/"):
                     self._send(app.h_company(path[3:], p))
+                elif path == "/metrics":
+                    self._send(app.h_metrics(p))
                 elif path == "/stats":
                     self._send(app.h_stats())
                 elif path == "/api/search":

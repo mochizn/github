@@ -144,6 +144,19 @@ def cmd_orders(store: Store, a: argparse.Namespace) -> None:
             print(f"      {truncate(detail, 150)}")
 
 
+def cmd_metrics(store: Store, a: argparse.Namespace) -> None:
+    items = store.order_metrics(metric=a.metric, min_yoy=a.min_yoy, since=a.since, code=a.code, limit=a.limit)
+    if a.json:
+        print(json.dumps([{"id": r["id"], "date": r["date"], "code": r["code"], "name": r["name"], **m} for r, m in items],
+                         ensure_ascii=False, indent=1))
+        return
+    if not items:
+        print("該当なし")
+    for r, m in items:
+        yoy = "   -   " if m.get("yoy_pct") is None else f"{m['yoy_pct']:+6.1f}%"
+        print(f"{r['date']}  {r['code']:<5} {truncate(r['name'], 14):<14} {m['metric']:<4} {format_yen(m['value_yen']):>10} {yoy}")
+
+
 def cmd_company(store: Store, a: argparse.Namespace) -> None:
     q = SearchQuery(code=a.code, category=a.category, limit=a.limit, date_from=a.since)
     _print_rows(store.search(q), a.json, show_snippet=False)
@@ -187,6 +200,11 @@ def cmd_show(store: Store, a: argparse.Namespace) -> None:
             txt = r[key] if a.full else truncate(r[key], 1200)
             for para in txt.splitlines():
                 print(w(para))
+    if r.get("metrics"):
+        print("\n[受注高・受注残高]")
+        for m in r["metrics"]:
+            yoy = "" if m.get("yoy_pct") is None else f" (前年比 {m['yoy_pct']:+.1f}%)"
+            print(f"  {m['metric']}: {format_yen(m['value_yen'])}{yoy}")
     if r.get("order_mentions"):
         print("\n[受注への言及]")
         for s in r["order_mentions"]:
@@ -329,6 +347,15 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("query", nargs="*")
     add_filters(sp)
     sp.set_defaults(func=cmd_orders)
+
+    sp = sub.add_parser("metrics", help="決算短信の受注高・受注残高(前年比で絞り込み)")
+    sp.add_argument("--metric", choices=["受注高", "受注残高"])
+    sp.add_argument("--min-yoy", type=float, help="前年同期比の下限(%%)")
+    sp.add_argument("--since")
+    sp.add_argument("--code")
+    sp.add_argument("--limit", "-n", type=int, default=50)
+    sp.add_argument("--json", action="store_true")
+    sp.set_defaults(func=cmd_metrics)
 
     sp = sub.add_parser("company", help="銘柄の開示タイムライン")
     sp.add_argument("code")

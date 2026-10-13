@@ -95,6 +95,7 @@ def process(store: Store, client: TdnetClient, limit: int = 200) -> dict:
                 order_json=ex.order or None,
                 order_mentions_json=ex.order_mentions or None,
                 signals_json=ex.signals or None,
+                metrics_json=ex.metrics or None,
                 direction=ex.direction,
                 amount_yen=ex.amount_yen,
             )
@@ -168,7 +169,7 @@ def export_archive(store: Store, root: str | Path, months: list[str] | None = No
         params = tuple(months)
     for r in store.iter_all(where, params):
         rec = {k: r.get(k) for k in ARCHIVE_FIELDS}
-        for k in ("kv_json", "order_json", "order_mentions_json", "signals_json", "llm_json"):
+        for k in ("kv_json", "order_json", "order_mentions_json", "signals_json", "metrics_json", "llm_json"):
             rec[k] = r.get(k[:-5])
         by_month[r["date"][:7]].append(rec)
     written = []

@@ -11,6 +11,7 @@ from pathlib import Path
 
 from .classify import LABELS
 from .db import Store
+from .extract import format_yen
 from .textutil import truncate
 
 TEMPLATE = """<!doctype html><html lang="ja"><head><meta charset="utf-8">
@@ -67,6 +68,9 @@ def _detail(r: dict) -> str:
     for k, lab, n in (("reason", "理由", 800), ("outlook", "見通し", 600), ("qualitative", "定性情報", 2500)):
         if r.get(k):
             parts.append(f"【{lab}】\n{truncate(r[k], n)}")
+    for m in r.get("metrics") or []:
+        yoy = "" if m.get("yoy_pct") is None else f" (前年比 {m['yoy_pct']:+.1f}%)"
+        parts.append(f"{m['metric']}: {format_yen(m['value_yen'])}{yoy}")
     if r.get("order_mentions"):
         parts.append("【受注への言及】\n" + "\n".join(r["order_mentions"]))
     return "\n".join(parts)

@@ -138,3 +138,28 @@ def test_notify_marks_when_no_webhook(store, monkeypatch):
     res = pipeline.notify_new(store, since="2026-09-01")
     assert res["notified"] == 2
     assert pipeline.notify_new(store, since="2026-09-01")["notified"] == 0
+
+
+def test_order_metrics_query(store):
+    store.update("id1", metrics_json=[{"metric": "受注高", "value_yen": 1e9, "yoy_pct": 52.2, "text": "a"},
+                                      {"metric": "受注残高", "value_yen": 2e9, "yoy_pct": -3.0, "text": "b"}])
+    store.commit()
+    items = store.order_metrics(min_yoy=10)
+    assert [(r["id"], m["metric"]) for r, m in items] == [("id1", "受注高")]
+    assert len(store.order_metrics()) == 2
+
+
+def test_migrate_adds_column(tmp_path):
+    import sqlite3
+
+    path = tmp_path / "old.db"
+    c = sqlite3.connect(path)
+    c.execute("CREATE TABLE disclosures (id TEXT PRIMARY KEY, date TEXT NOT NULL, time TEXT, code TEXT, name TEXT, title TEXT,"
+              " category TEXT, tags TEXT, importance INTEGER, is_correction INTEGER, pdf_url TEXT, xbrl_url TEXT, exchange TEXT,"
+              " history TEXT, status TEXT, attempts INTEGER, error TEXT, fetched_at TEXT, processed_at TEXT, summary TEXT, lead TEXT,"
+              " outlook TEXT, reason TEXT, qualitative TEXT, body TEXT, kv_json TEXT, order_json TEXT, order_mentions_json TEXT,"
+              " signals_json TEXT, direction TEXT, amount_yen REAL, llm_json TEXT, llm_model TEXT, notified_at TEXT)")
+    c.commit()
+    c.close()
+    s = Store(path)
+    assert "metrics_json" in {r[1] for r in s.conn.execute("PRAGMA table_info(disclosures)")}

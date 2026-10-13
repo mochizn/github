@@ -23,7 +23,7 @@ _CUR = r"(円|米ドル|USドル|US\$|ドル|ユーロ|EUR|人民元|元|ポン�
 _NUM = r"[0-9][0-9,]*(?:\.[0-9]+)?"
 _AMOUNT_RE = re.compile(
     rf"(?P<approx>約|概算|総額|およそ)?\s*"
-    rf"(?:(?P<oku>{_NUM})\s*億\s*(?P<man>{_NUM})\s*万\s*(?P<cur1>{_CUR})"
+    rf"(?:(?P<oku>{_NUM})\s*億\s*(?:(?P<sen>[0-9]+)\s*千)?\s*(?:(?P<hyaku>[0-9]+)\s*百)?\s*(?P<man>{_NUM})?\s*万\s*(?P<cur1>{_CUR})"
     rf"|(?P<num>{_NUM})\s*(?P<unit>兆|億|千万|百万|十万|万|千)?\s*(?P<cur2>{_CUR}))"
 )
 
@@ -57,7 +57,9 @@ def parse_amounts(text: str) -> list[Amount]:
     out: list[Amount] = []
     for m in _AMOUNT_RE.finditer(t):
         if m.group("oku"):
-            v = float(m.group("oku").replace(",", "")) * 10**8 + float(m.group("man").replace(",", "")) * 10**4
+            man = (int(m.group("sen") or 0) * 1000 + int(m.group("hyaku") or 0) * 100
+                   + float((m.group("man") or "0").replace(",", "")))
+            v = float(m.group("oku").replace(",", "")) * 10**8 + man * 10**4
             cur = m.group("cur1")
         else:
             v = float(m.group("num").replace(",", "")) * _UNIT[m.group("unit") or ""]
@@ -292,6 +294,7 @@ class Extracted:
     kv: dict = field(default_factory=dict)
     order: dict = field(default_factory=dict)
     order_mentions: list = field(default_factory=list)
+    metrics: list = field(default_factory=list)  # 受注高・受注残高などの数値
     direction: str = ""  # forecast: up/down/mixed
     signals: list = field(default_factory=list)
     amount_yen: float | None = None
@@ -376,6 +379,7 @@ def _extract_earnings(ex: Extracted, lines: list[str]) -> None:
     if not head:
         head = next((s for s in split_sentences(text) if re.search(r"(売上高|営業収益|売上収益)", s) and re.search(r"円", s) and re.search(r"[%％]", s)), "")
     ex.summary = truncate(head, 300)
+    ex.metrics = extract_order_metrics("\n".join([ex.qualitative, ex.outlook]))
     ex.order_mentions = [
         truncate(s, 200) for s in split_sentences("\n".join([ex.qualitative, ex.outlook])) if re.search(r"受注(高|残|額|残高|環境|状況)", s)
     ][:6]
@@ -401,6 +405,35 @@ def forecast_direction(title: str, text: str) -> str:
         if up or down:
             return "up" if up > down * 1.5 else "down" if down > up * 1.5 else "mixed"
     return ""
+
+
+_METRIC_RE = re.compile(r"(新規受注高|受注残高|受注残|受注高|受注額|受注金額)")
+_YOY_RE = re.compile(r"前年同期比\s*([0-9]+(?:\.[0-9]+)?)\s*[%％]\s*(増|減)")
+
+
+def extract_order_metrics(text: str, limit: int = 6) -> list[dict]:
+    """「受注高は37,270百万円(前年同期比52.2%増加)」のような記述を数値化する。"""
+    out: list[dict] = []
+    for sent in split_sentences(nfkc(text)):
+        for m in _METRIC_RE.finditer(sent):
+            tail = sent[m.end(): m.end() + 45]
+            # 次の指標名・「売上高」等が出てくる前の金額だけを対象にする
+            stop = re.search(r"受注|売上|利益|損失|件数", tail)
+            window = tail[: stop.start()] if stop else tail
+            amts = [a for a in parse_amounts(window) if a.currency == "JPY"]
+            if not amts:
+                continue
+            a = amts[0]
+            after = sent[m.end(): m.end() + 80]
+            y = _YOY_RE.search(after[: after.find("。") if "。" in after else None])
+            yoy = None
+            if y:
+                yoy = float(y.group(1)) * (1 if y.group(2) == "増" else -1)
+            metric = "受注残高" if m.group(1).startswith("受注残") else "受注高"
+            out.append({"metric": metric, "value_yen": a.value, "yoy_pct": yoy, "text": truncate(sent, 160)})
+            if len(out) >= limit:
+                return out
+    return out
 
 
 def _extract_forecast(ex: Extracted, lines: list[str], full: str, title: str) -> None:

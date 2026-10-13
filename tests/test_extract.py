@@ -129,3 +129,28 @@ def test_forecast_direction(title, text, expected):
     from kaiji.extract import forecast_direction
 
     assert forecast_direction(title, text) == expected
+
+
+@pytest.mark.parametrize(
+    "text,yen",
+    [("88億27百万円", 88.27e8), ("1,459億8千3百万円", 1459.83e8), ("571億6千7百万円", 571.67e8), ("1,604,842千円", 1_604_842e3)],
+)
+def test_composite_amounts(text, yen):
+    assert best_yen(text)[0] == pytest.approx(yen)
+
+
+def test_order_metrics():
+    from kaiji.extract import extract_order_metrics
+
+    m = extract_order_metrics(
+        "この結果、全体の受注高は前年同期比50.4%増加の37,270百万円となり、受注残高は23,359百万円(前年同期比76.6%増加)となりました。"
+        "その結果、受注高は88億27百万円、売上高は37億7百万円となりました。"
+    )
+    assert m[0]["metric"] == "受注高" and m[0]["value_yen"] == pytest.approx(37_270e6)
+    assert m[1] == pytest.approx(m[1]) and m[1]["metric"] == "受注残高" and m[1]["yoy_pct"] == pytest.approx(76.6)
+    assert m[2]["value_yen"] == pytest.approx(88.27e8) and m[2]["yoy_pct"] is None
+
+
+def test_earnings_metrics_fixture():
+    ex = extract(load("earnings_takeuchi.txt"), "決算短信", ["earnings"])
+    assert any(x["metric"] == "受注高" and x["value_yen"] == pytest.approx(1459.83e8) and x["yoy_pct"] == pytest.approx(48.1) for x in ex.metrics)
