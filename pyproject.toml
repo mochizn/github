@@ -1,0 +1,30 @@
+[project]
+name = "kaiji"
+version = "0.1.0"
+description = "適時開示(TDnet)から受注・定性情報を抽出・蓄積・検索するボット"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "lxml>=5",
+    "pdfplumber>=0.11",
+    "pypdf>=4",
+]
+
+[project.optional-dependencies]
+llm = ["anthropic>=1.0"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+kaiji = "kaiji.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["kaiji"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

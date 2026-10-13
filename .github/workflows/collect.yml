@@ -1,0 +1,106 @@
+# 適時開示の定期収集。
+#
+# 有効化するには リポジトリ Settings > Secrets and variables > Actions で:
+#   Variables:
+#     KAIJI_ENABLED        = true            (スケジュール実行を有効化)
+#     KAIJI_DATA_REPO      = owner/private-repo  (データ保存先。未設定ならこのリポジトリ)
+#     KAIJI_DATA_BRANCH    = kaiji-data       (保存先ブランチ。既定 kaiji-data)
+#     KAIJI_LLM            = 1                (任意: Claude要約)
+#   Secrets:
+#     KAIJI_DATA_TOKEN     別リポジトリに保存する場合の Fine-grained PAT (contents: read/write)
+#     KAIJI_DISCORD_WEBHOOK / KAIJI_SLACK_WEBHOOK  (任意: 通知)
+#     ANTHROPIC_API_KEY    (任意: KAIJI_LLM=1 のとき)
+#
+# 公開リポジトリへ抽出データを push するのは TDnet 掲載情報の再配布にあたり得るため、
+# 公開リポジトリ自身への保存は KAIJI_ALLOW_PUBLIC_DATA=true を明示しない限り行わない。
+name: collect
+on:
+  schedule:
+    # 平日 JST 12:10 / 15:40 / 17:10 / 19:10 / 22:10 (UTC表記)
+    - cron: "10 3 * * 1-5"
+    - cron: "40 6 * * 1-5"
+    - cron: "10 8 * * 1-5"
+    - cron: "10 10 * * 1-5"
+    - cron: "10 13 * * 1-5"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "遡る日数(初回は30程度で過去1か月分をバックフィル)"
+        default: "2"
+concurrency:
+  group: kaiji-collect
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  collect:
+    if: github.event_name == 'workflow_dispatch' || vars.KAIJI_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      DATA_REPO: ${{ vars.KAIJI_DATA_REPO || github.repository }}
+      DATA_BRANCH: ${{ vars.KAIJI_DATA_BRANCH || 'kaiji-data' }}
+      KAIJI_DB: ${{ github.workspace }}/work/kaiji.db
+      KAIJI_LLM: ${{ vars.KAIJI_LLM || '0' }}
+      KAIJI_DISCORD_WEBHOOK: ${{ secrets.KAIJI_DISCORD_WEBHOOK }}
+      KAIJI_SLACK_WEBHOOK: ${{ secrets.KAIJI_SLACK_WEBHOOK }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Guard public data
+        id: guard
+        run: |
+          push=true
+          if [ "$DATA_REPO" = "${{ github.repository }}" ] && [ "${{ github.event.repository.private }}" != "true" ] \
+             && [ "${{ vars.KAIJI_ALLOW_PUBLIC_DATA }}" != "true" ]; then
+            echo "::warning::公開リポジトリのためデータは保存しません。KAIJI_DATA_REPO に非公開リポジトリを設定してください。"
+            push=false
+          fi
+          echo "push=$push" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[llm]"
+      # DBはActionsキャッシュで次回実行へ引き継ぐ(通知済みフラグ等の保持。公開ダウンロードされない)
+      - uses: actions/cache@v4
+        with:
+          path: work
+          key: kaiji-db-${{ github.run_id }}
+          restore-keys: kaiji-db-
+      - name: Checkout data branch
+        if: steps.guard.outputs.push == 'true'
+        env:
+          TOKEN: ${{ secrets.KAIJI_DATA_TOKEN || github.token }}
+        run: |
+          git clone --depth 1 --branch "$DATA_BRANCH" "https://x-access-token:${TOKEN}@github.com/${DATA_REPO}.git" kaiji-data \
+            || { git init -b "$DATA_BRANCH" kaiji-data && git -C kaiji-data remote add origin "https://x-access-token:${TOKEN}@github.com/${DATA_REPO}.git"; }
+          mkdir -p kaiji-data/archive work
+          # キャッシュが無い(初回・期限切れ)ときはアーカイブから復元
+          [ -f work/kaiji.db ] || python -m kaiji import --archive kaiji-data/archive
+      - name: Collect / extract / notify
+        run: |
+          mkdir -p work
+          python -m kaiji run --days "${{ github.event.inputs.days || '2' }}" --archive kaiji-data/archive \
+            $([ "${{ steps.guard.outputs.push }}" = "true" ] || echo --no-archive)
+          python -m kaiji stats
+      - name: Push data
+        if: steps.guard.outputs.push == 'true'
+        run: |
+          cd kaiji-data
+          git config user.name "kaiji-bot"
+          git config user.email "kaiji-bot@users.noreply.github.com"
+          git add archive
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -q -m "data: $(date -u +%FT%TZ)"
+          for i in 1 2 3 4; do git push origin "HEAD:${DATA_BRANCH}" && break; sleep $((2**i)); done
+      # 公開リポジトリの成果物は誰でもダウンロードできるため、非公開リポジトリでのみ出力する
+      - name: Build searchable HTML
+        if: github.event.repository.private
+        run: python -m kaiji site --out site
+      - uses: actions/upload-artifact@v4
+        if: github.event.repository.private
+        with:
+          name: kaiji-site
+          path: site/index.html
+          retention-days: 7
