@@ -8,6 +8,8 @@ import unicodedata
 _CJK = r"　-ヿ㐀-䶿一-鿿＀-￯々〆ヶ"
 # PDF抽出で「会 社 名」のように和文字の間に入る空白
 _CJK_CHAR = re.compile(rf"[{_CJK}]")
+# 「受注金額 747百万円」のような項目名と値の区切りは残すため、和文字→数字は年月等の後のみ詰める
+_DIGIT_CJK_SPACE = re.compile(rf"(?<=[0-9]) (?=[{_CJK}])|(?<=[年月約第]) (?=[0-9])")
 
 
 def _collapse_letter_spacing(s: str) -> str:
@@ -40,6 +42,8 @@ def nfkc(s: str) -> str:
 def clean_line(s: str) -> str:
     s = nfkc(s).replace("　", " ")
     s = re.sub(r"[ \t]+", " ", s).strip()
+    # 「2026 年 10 月」「1,000 百万円」のような数字と和文字の間の空白を詰める
+    s = _DIGIT_CJK_SPACE.sub("", s)
     return _collapse_letter_spacing(s)
 
 
